@@ -4,7 +4,19 @@ session_start();
 require_once '../includes/config.php';
 require_once '../cart/cart_session.php';
 
+$isLoggedIn = isset($_SESSION['user_id']);
+
 $data = json_decode(file_get_contents('php://input'), true);
+
+if (!$isLoggedIn) {
+    echo json_encode([
+        'success' => false,
+        'requiresLogin' => true,
+        'message' => 'You need to log in or create an account to add items to the cart.'
+    ]);
+    exit;
+}
+
 $product_id = $data['product_id'] ?? $_POST['product_id'] ?? null;
 $quantity = isset($data['quantity']) ? (int)$data['quantity'] : (isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1);
 

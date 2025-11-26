@@ -1,3 +1,14 @@
+    <div class="auth-modal-backdrop" id="login-required-backdrop" aria-hidden="true">
+        <div class="auth-modal-card" role="dialog" aria-modal="true" aria-labelledby="login-required-title">
+            <h2 id="login-required-title">You need an account</h2>
+            <p>You need to log in or create an account to add items to the cart.</p>
+            <div class="auth-modal-actions">
+                <a href="login.php" class="btn gradient-btn auth-modal-btn">Login</a>
+                <a href="signup.php" class="btn ghost-btn auth-modal-btn">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="container">
             <div class="footer-content">

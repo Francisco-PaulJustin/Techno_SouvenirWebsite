@@ -46,6 +46,43 @@
     gap: 1rem;
 }
 
+.cart-inline-message {
+    margin-top: 0.25rem;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    background:  #abffc3ba;
+    font-size: 0.9rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--clr-muted);
+    opacity: 0;
+    transform: translateY(4px);
+    pointer-events: none;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.cart-inline-message.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.cart-inline-message p {
+    margin: 0;
+}
+
+.cart-inline-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+}
+
+.cart-inline-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
 .quantity-selector label {
     font-weight: 600;
     color: var(--clr-muted);

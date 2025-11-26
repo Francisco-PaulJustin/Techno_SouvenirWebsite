@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initScrollAnimations();
     initNavbarProfileMenu();
     initSmoothSections();
+    initAuthModal();
 });
 
 function updateCartCount() {
@@ -105,5 +106,19 @@ function initSmoothSections() {
             }
         });
     });
+}
+
+function initAuthModal() {
+    const body = document.body;
+    const isLoggedIn = body.getAttribute('data-logged-in') === '1';
+    const backdrop = document.getElementById('login-required-backdrop');
+
+    if (!backdrop) return;
+
+    // Expose helpers globally for other scripts
+    window.isUserLoggedIn = () => isLoggedIn;
+    window.showLoginRequiredModal = () => {
+        backdrop.classList.add('is-visible');
+    };
 }
 

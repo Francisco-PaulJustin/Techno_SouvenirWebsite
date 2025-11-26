@@ -44,6 +44,7 @@ require_once 'includes/navbar.php';
                             <input type="number" id="quantity" name="quantity" value="1" min="1" max="<?php echo $product['stock']; ?>">
                         </div>
                         <button type="submit" class="btn gradient-btn">Add to Cart</button>
+                        <div class="cart-inline-message" id="cart-inline-message"></div>
                     </form>
                     
                     <div class="product-meta">

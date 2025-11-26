@@ -15,6 +15,9 @@
         <?php endforeach; ?>
     <?php endif; ?>
 </head>
-<?php $body_class = $body_class ?? ''; ?>
-<body class="app-body <?php echo htmlspecialchars($body_class); ?>">
+<?php
+$body_class = $body_class ?? '';
+$is_logged_in = isset($_SESSION['user_id']);
+?>
+<body class="app-body <?php echo htmlspecialchars($body_class); ?>" data-logged-in="<?php echo $is_logged_in ? '1' : '0'; ?>">
 
