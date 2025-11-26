@@ -4,7 +4,8 @@
     align-items: center;
     justify-content: center;
     padding: 3rem 1.25rem;
-    background:
+    background-color: #F2E9FE;
+    background-image:
         radial-gradient(circle at 10% 20%, rgba(90, 46, 152, 0.12), transparent 30%),
         radial-gradient(circle at 90% 80%, rgba(255, 184, 0, 0.12), transparent 30%);
 }
@@ -14,7 +15,7 @@
     padding: 2.5rem 2.25rem;
     border-radius: 16px;
     box-shadow: var(--shadow-soft);
-    max-width: 480px;
+    max-width: 440px;
     width: 100%;
     position: relative;
     overflow: hidden;
@@ -44,8 +45,10 @@
 }
 
 .auth-form .form-group input {
-    border-radius: 8px;
+    width: 100%;
+    border-radius: 10px;
     background: rgba(242, 233, 254, 0.45);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .auth-form .form-group input:focus {
