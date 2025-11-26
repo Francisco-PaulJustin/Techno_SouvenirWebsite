@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<main class="auth-page fade-in">
+<main class="auth-page">
     <div class="container">
         <div class="auth-container auth-card-animated">
             <h1>Sign Up</h1>
@@ -155,5 +155,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </main>
-
-*** End of File
