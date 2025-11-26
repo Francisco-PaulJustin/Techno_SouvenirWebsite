@@ -1,0 +1,157 @@
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+    background: #f8f6fb;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #5A2E98, #3c1d68);
+    color: #fff;
+    padding: 0;
+    box-shadow: var(--shadow-strong);
+}
+
+.sidebar-header {
+    padding: 1.75rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    opacity: 0.85;
+    transition: opacity 0.3s ease, background 0.3s ease;
+}
+
+.sidebar-nav a:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.admin-content {
+    flex: 1;
+    padding: 2.5rem;
+    background: #f8f6fb;
+}
+
+.admin-content h1 {
+    margin-bottom: 2rem;
+    color: var(--clr-primary);
+    font-family: 'Poppins', sans-serif;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: #fff;
+    padding: 1.75rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card h3 {
+    font-size: 0.95rem;
+    color: var(--clr-muted);
+    margin-bottom: 0.4rem;
+}
+
+.stat-number {
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--clr-primary);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+}
+
+.admin-table thead {
+    background: rgba(90, 46, 152, 0.15);
+    color: var(--clr-primary);
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(90, 46, 152, 0.1);
+}
+
+.admin-table tbody tr:hover {
+    background-color: rgba(242, 233, 254, 0.4);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background-color: rgba(255, 184, 0, 0.15);
+    color: #a16900;
+}
+
+.status-processing {
+    background-color: rgba(90, 46, 152, 0.15);
+    color: var(--clr-primary);
+}
+
+.status-shipped,
+.status-completed {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #0e8a46;
+}
+
+.status-cancelled {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: #c0392b;
+}
+
+.btn-sm {
+    padding: 0.55rem 1.05rem;
+    font-size: 0.85rem;
+    border-radius: 999px;
+}
+
+.admin-form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow-soft);
+    max-width: 900px;
+}
+

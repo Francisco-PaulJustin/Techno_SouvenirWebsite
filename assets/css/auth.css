@@ -1,0 +1,120 @@
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.25rem;
+    background:
+        radial-gradient(circle at 10% 20%, rgba(90, 46, 152, 0.12), transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(255, 184, 0, 0.12), transparent 30%);
+}
+
+.auth-container {
+    background: var(--clr-bg);
+    padding: 2.5rem 2.25rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-soft);
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    transform: scale(0.98);
+    animation: authCardIn 0.45s var(--transition) forwards;
+}
+
+.auth-container::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(90, 46, 152, 0.25), rgba(255, 184, 0, 0.25));
+    opacity: 0.7;
+    z-index: -1;
+}
+
+.auth-container h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--clr-primary);
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-form {
+    margin-bottom: 1.25rem;
+}
+
+.auth-form .form-group input {
+    border-radius: 8px;
+    background: rgba(242, 233, 254, 0.45);
+}
+
+.auth-form .form-group input:focus {
+    box-shadow: 0 0 0 3px rgba(90, 46, 152, 0.18);
+    border-color: var(--clr-primary);
+}
+
+.auth-btn {
+    width: 100%;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #5A2E98, #FFB800);
+    box-shadow: 0 10px 24px rgba(90, 46, 152, 0.35);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.18);
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 1.25rem;
+    color: var(--clr-muted);
+}
+
+.auth-link a {
+    color: var(--clr-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+.field-error {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: #c0392b;
+    min-height: 1em;
+}
+
+input.is-invalid {
+    border-color: #E74C3C;
+    background: rgba(231, 76, 60, 0.06);
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.18);
+}
+
+.auth-card-animated {
+    will-change: transform, box-shadow;
+}
+
+@keyframes authCardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 600px) {
+    .auth-container {
+        padding: 2rem 1.5rem;
+        border-radius: 12px;
+    }
+}
+
