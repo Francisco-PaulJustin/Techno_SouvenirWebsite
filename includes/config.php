@@ -6,7 +6,7 @@ define('DB_USER', 'root');
 define('DB_PASS', '');
 
 // Site configuration
-define('SITE_NAME', 'Souvenir Shop');
+define('SITE_NAME', 'MemoCraft');
 define('SITE_URL', 'http://localhost/techno_website/souvenir_shop');
 
 // Database connection

@@ -44,7 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_role'] = $user['role'] ?? 'customer';
             $_SESSION['user_profile_image'] = !empty($user['profile_image']) ? $user['profile_image'] : null;
 
-            header('Location: ' . $redirect);
+            // Set admin specific session variables if the user is an admin
+            if ($_SESSION['user_role'] === 'admin') {
+                $_SESSION['admin_id'] = $user['id'];
+                $_SESSION['admin_name'] = $_SESSION['user_name']; // Use the combined user name
+                $_SESSION['admin_email'] = $user['email'];
+            }
+
+            // Redirect based on user role
+            if ($_SESSION['user_role'] === 'admin') {
+                header('Location: admin/index.php');
+            } else {
+                // Assuming default is customer or any other role goes to customer interface
+                header('Location: ' . $redirect);
+            }
             exit;
         } else {
             // Either user not found or password mismatch
