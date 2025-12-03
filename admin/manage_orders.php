@@ -42,7 +42,9 @@ if ($order_id) {
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="../assets/css/admin.css">
 <div class="admin-content">
     <h1><?php echo $order_id ? 'Order Details' : 'Manage Orders'; ?></h1>
     
@@ -61,7 +63,7 @@ if ($order_id) {
                 <p><strong>Customer:</strong> <?php echo htmlspecialchars($order['user_name']); ?> (<?php echo htmlspecialchars($order['user_email']); ?>)</p>
                 <p><strong>Date:</strong> <?php echo date('Y-m-d H:i', strtotime($order['created_at'])); ?></p>
                 <p><strong>Status:</strong> <span class="status-badge status-<?php echo $order['status']; ?>"><?php echo ucfirst($order['status']); ?></span></p>
-                <p><strong>Total:</strong> $<?php echo number_format($order['total'], 2); ?></p>
+                <p><strong>Total:</strong> ₱<?php echo number_format($order['total'], 2); ?></p>
             </div>
             
             <form method="POST" action="manage_orders.php?id=<?php echo $order_id; ?>" class="status-form">
@@ -94,8 +96,8 @@ if ($order_id) {
                         <tr>
                             <td><?php echo htmlspecialchars($item['product_name']); ?></td>
                             <td><?php echo $item['quantity']; ?></td>
-                            <td>$<?php echo number_format($item['price'], 2); ?></td>
-                            <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                            <td>₱<?php echo number_format($item['price'], 2); ?></td>
+                            <td>₱<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -120,7 +122,7 @@ if ($order_id) {
                     <tr>
                         <td>#<?php echo $ord['id']; ?></td>
                         <td><?php echo htmlspecialchars($ord['user_name']); ?></td>
-                        <td>$<?php echo number_format($ord['total'], 2); ?></td>
+                        <td>₱<?php echo number_format($ord['total'], 2); ?></td>
                         <td><span class="status-badge status-<?php echo $ord['status']; ?>"><?php echo ucfirst($ord['status']); ?></span></td>
                         <td><?php echo date('Y-m-d H:i', strtotime($ord['created_at'])); ?></td>
                         <td><a href="manage_orders.php?id=<?php echo $ord['id']; ?>" class="btn btn-sm">View</a></td>
@@ -133,3 +135,4 @@ if ($order_id) {
 
 <?php require_once 'includes/admin_footer.php'; ?>
 
+</html>

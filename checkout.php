@@ -187,10 +187,10 @@ require_once 'includes/navbar.php';
                             $total += $subtotal;
                             echo '<div class="order-item">';
                             echo '<span>' . htmlspecialchars($product['name']) . ' x ' . $quantity . '</span>';
-                            echo '<span>$' . number_format($subtotal, 2) . '</span>';
+                            echo '<span>₱' . number_format($subtotal, 2) . '</span>';
                             echo '</div>';
                         }
-                        echo '<div class="order-total"><strong>Total: $' . number_format($total, 2) . '</strong></div>';
+                        echo '<div class="order-total"><strong>Total: ₱' . number_format($total, 2) . '</strong></div>';
                     } else {
                         echo '<p>Your cart is empty. Add items to see a summary.</p>';
                     }

@@ -38,7 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stmt = $pdo->query("SELECT * FROM users ORDER BY created_at DESC");
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="../assets/css/admin.css">
+<div class="admin-content">
 <div class="admin-content">
     <h1>Manage Users</h1>
     
@@ -96,3 +99,4 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?php require_once 'includes/admin_footer.php'; ?>
 
+</html>

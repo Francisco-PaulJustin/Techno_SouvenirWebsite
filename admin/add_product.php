@@ -50,6 +50,9 @@ $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="../assets/css/admin.css">
 <div class="admin-content">
     <h1>Add Product</h1>
     
@@ -112,3 +115,4 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <?php require_once 'includes/admin_footer.php'; ?>
 
+</html>

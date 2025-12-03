@@ -1,295 +1,420 @@
-.admin-wrapper {
-    display: flex;
-    min-height: 100vh;
-    background: #f8f6fb;
-    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; /* Ensure consistent body font */
-    box-sizing: border-box; /* Ensure padding is included in element's total width and height */
+/* ----------------------------------------
+   ROOT VARIABLES
+----------------------------------------- */
+:root{
+  --clr-primary: #5A2E98;
+  --clr-primary-dark: #3c1d68;
+  --clr-muted: #7a7a7a;
+  --clr-bg: #f8f6fb;
+  --shadow-soft: 0 4px 15px rgba(0,0,0,0.06);
+  --shadow-strong: 0 6px 25px rgba(0,0,0,0.13);
+  --radius-xl: 20px;
+  --sidebar-w: 260px; /* desktop sidebar width */
+  --sidebar-w-collapsed: 80px; /* collapsed/mobile */
+  --max-content-width: 1200px;
 }
 
-.admin-sidebar {
-    width: 200px; /* Reduced width */
-    background: linear-gradient(180deg, #5A2E98, #3c1d68);
-    color: #fff;
-    padding: 0;
-    box-shadow: var(--shadow-strong);
-    flex-shrink: 0; /* Prevent sidebar from shrinking */
+/* ----------------------------------------
+   BASE RESET
+----------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-.sidebar-header {
-    padding: 1.5rem 1rem; /* Adjusted padding */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+html,body{
+  height:100%;
+  margin:0;
 }
 
-.sidebar-header h2 {
-    font-size: 1.2rem; /* Adjusted font size */
-    font-family: 'Poppins', sans-serif;
+body {
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--clr-bg);
+  color: #222;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-.sidebar-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+/* ----------------------------------------
+   LAYOUT: sidebar fixed + content offset
+----------------------------------------- */
+.admin-wrapper{
+  min-height:100vh;
+  display:block;
 }
 
-.sidebar-nav a {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem; /* Adjusted gap */
-    padding: 0.8rem 1rem; /* Adjusted padding */
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    opacity: 0.85;
-    transition: opacity 0.3s ease, background 0.3s ease;
-    font-family: 'Inter', sans-serif; /* Explicitly set font for nav links */
+/* Fixed sidebar so content never sits underneath it */
+.admin-sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  height:100vh;
+  width:var(--sidebar-w);
+  background: linear-gradient(180deg, var(--clr-primary), var(--clr-primary-dark));
+  color:#fff;
+  box-shadow: var(--shadow-strong);
+  z-index:1000;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
 }
 
-.sidebar-nav a:hover {
-    opacity: 1;
-    background: rgba(255, 255, 255, 0.08);
+/* content area offset from fixed sidebar */
+.admin-content{
+  margin-left: calc(var(--sidebar-w) - 120px);
+  padding: 2.25rem;
+  min-height:100vh;
+  transition: margin-left 0.25s ease;
+  max-width: 100%;
 }
 
-.admin-content {
-    flex: 1;
-    padding: 2rem; /* Adjusted padding */
-    background: #f8f6fb;
-    font-family: 'Inter', sans-serif; /* Explicitly set font for admin content */
-    min-width: 0; /* Allow content to shrink */
-    overflow-x: auto; /* Allow horizontal scrolling if content overflows */
+.admin-content .container {
+  max-width: 100%;
+  margin: 0;        /* ⬅ removes huge gap */
+  padding: 0;       /* optional */
 }
 
+/* page title */
+.page-title,
 .admin-content h1 {
-    margin-bottom: 1.5rem; /* Adjusted margin */
-    font-size: 2rem; /* Adjusted font size */
-    color: var(--clr-primary);
-    font-family: 'Poppins', sans-serif;
+  margin: 0 0 1.25rem 0;
+  font-size: 2rem;
+  color: var(--clr-primary);
+  font-weight:700;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem; /* Adjusted gap */
-    margin-bottom: 1.5rem; /* Adjusted margin */
+/* ----------------------------------------
+   SIDEBAR internals
+----------------------------------------- */
+.sidebar-header{
+  padding: 1.5rem 1.25rem;
+  border-bottom:1px solid rgba(255,255,255,0.08);
 }
 
-.stat-card {
-    background: #fff;
-    padding: 1.75rem;
-    border-radius: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Subtle initial shadow */
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease; /* Smooth transition for hover effects */
+.sidebar-header h2{
+  font-size:30px;
+  margin:0;
+  font-weight:700;
+  letter-spacing:0.2px;
 }
 
-.stat-card:hover {
-    transform: translateY(-5px); /* Lift card on hover */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12); /* Enhanced shadow on hover */
+.sidebar-nav{
+  padding: 0.75rem 0;
+  flex:1;
 }
 
-.stat-card h3 {
-    font-size: 0.95rem;
-    color: var(--clr-muted);
-    margin-bottom: 0.4rem;
-    font-family: 'Inter', sans-serif; /* Explicitly set font for stat card headings */
+.sidebar-nav ul{
+  font-size: 23px;
+  list-style:none;
+  margin:0;
+  padding:0;
 }
 
-.stat-number {
-    font-size: 2.1rem;
-    font-weight: 700;
-    color: var(--clr-primary);
-    font-family: 'Poppins', sans-serif; /* Explicitly set font for stat numbers */
+.sidebar-nav li + li{
+  margin-top:0.15rem;
 }
 
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: var(--shadow-soft);
+.sidebar-nav a{
+  display:flex;
+  align-items:center;
+  gap:0.6rem;
+  padding:0.75rem 1rem;
+  color: rgba(255,255,255,0.95);
+  text-decoration:none;
+  font-weight:600;
+  transition: background 160ms ease, transform 160ms ease;
+  border-left: 4px solid transparent;
 }
 
-.admin-table thead {
-    background: rgba(90, 46, 152, 0.15);
-    color: var(--clr-primary);
-    font-family: 'Poppins', sans-serif; /* Explicitly set font for table headers */
+.sidebar-nav a .icon {
+  display:inline-flex;
+  width:22px;
+  height:22px;
+  align-items:center;
+  justify-content:center;
 }
 
-.admin-table th,
-.admin-table td {
-    padding: 1rem 1.25rem;
-    text-align: left;
-    border-bottom: 1px solid rgba(90, 46, 152, 0.1);
-    font-family: 'Inter', sans-serif; /* Explicitly set font for table cells */
+.sidebar-nav a:hover,
+.sidebar-nav a:focus{
+  background: rgba(255,255,255,0.06);
+  transform: translateX(2px);
+  outline: none;
 }
 
-.admin-table tbody tr:hover {
-    background-color: rgba(242, 233, 254, 0.4);
+.sidebar-nav a.active{
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  border-left-color: rgba(255,255,255,0.18);
 }
 
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.35rem 0.9rem;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    font-family: 'Inter', sans-serif; /* Explicitly set font for status badges */
+/* Footer area inside sidebar (optional) */
+.sidebar-footer{
+  padding:1rem;
+  border-top:1px solid rgba(255,255,255,0.06);
+  font-size:0.9rem;
+  opacity:0.9;
 }
 
-.status-pending {
-    background-color: rgba(255, 184, 0, 0.15);
-    color: #a16900;
+/* ----------------------------------------
+   STATS GRID
+----------------------------------------- */
+.stats-grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:1rem;
+  margin-bottom:1.5rem;
 }
 
-.status-processing {
-    background-color: rgba(90, 46, 152, 0.15);
-    color: var(--clr-primary);
+/* keep cards consistent height */
+.stat-card{
+  background:#fff;
+  padding:1.4rem;
+  border-radius: 14px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:110px;
 }
 
-.status-shipped,
-.status-completed {
-    background-color: rgba(46, 204, 113, 0.15);
-    color: #0e8a46;
+.stat-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-.status-cancelled {
-    background-color: rgba(231, 76, 60, 0.15);
-    color: #c0392b;
+.stat-card h3{
+  margin:0 0 0.5rem 0;
+  font-size:0.95rem;
+  color: var(--clr-muted);
+  font-weight:600;
 }
 
-.btn-sm {
-    padding: 0.55rem 1.05rem;
-    font-size: 0.85rem;
-    border-radius: 999px;
-    font-family: 'Poppins', sans-serif; /* Explicitly set font for small buttons */
+.stat-number{
+  font-size:1.9rem;
+  font-weight:800;
+  color:var(--clr-primary);
+  margin:0;
 }
 
-.admin-form {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 24px;
-    box-shadow: var(--shadow-soft);
-    max-width: 900px;
-    font-family: 'Inter', sans-serif; /* Explicitly set font for admin forms */
+/* highlight currency visually */
+.stat-number span.currency{
+  font-size:0.95rem;
+  margin-right:6px;
+  color:var(--clr-muted);
+  font-weight:700;
 }
 
-@media (max-width: 992px) {
-    .admin-sidebar {
-        width: 80px; /* Collapse sidebar on smaller screens */
-    }
-
-    .sidebar-header h2 { 
-        display: none; /* Hide text on collapsed sidebar */
-    }
-
-    .sidebar-nav a {
-        justify-content: center;
-        padding: 1rem 0.5rem;
-        font-size: 0.75rem; /* Smaller font for collapsed nav */
-    }
-
-    .sidebar-nav a span {
-        display: none; /* Hide text label, only show icon */
-    }
-
-    .admin-content {
-        padding: 1.5rem; /* Reduced padding for smaller screens */
-    }
-
-    .admin-content h1 {
-        font-size: 1.8rem; /* Adjusted font size for smaller screens */
-        margin-bottom: 1rem;
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjust grid for smaller cards */
-        gap: 0.75rem;
-    }
-
-    .stat-card {
-        padding: 1.25rem;
-        border-radius: 16px;
-    }
-
-    .stat-card h3 {
-        font-size: 0.85rem;
-    }
-
-    .stat-number {
-        font-size: 1.8rem;
-    }
-
-    .admin-table {
-        border-radius: 16px;
-    }
-
-    .admin-table th,
-    .admin-table td {
-        padding: 0.75rem 1rem;
-        font-size: 0.85rem;
-    }
-
-    .status-badge {
-        font-size: 0.75rem;
-        padding: 0.3rem 0.75rem;
-    }
-
-    .btn-sm {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.75rem;
-    }
+/* ----------------------------------------
+   TABLES
+----------------------------------------- */
+.table-wrap {
+  width:100%;
+  overflow:auto;
+  border-radius: 14px;
+  background: transparent;
 }
 
-@media (max-width: 600px) {
-    .admin-wrapper {
-        flex-direction: column; /* Stack sidebar and content */
-    }
-
-    .admin-sidebar {
-        width: 100%;
-        height: auto; /* Allow sidebar to take natural height */
-        padding-bottom: 0.5rem; /* Add some padding at the bottom */
-        display: flex; /* Make it a flex container for horizontal items */
-        flex-direction: row; /* Arrange items horizontally */
-        justify-content: space-around;
-        align-items: center;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        position: fixed; /* Make sidebar fixed at the bottom */
-        bottom: 0;
-        left: 0;
-        z-index: 100;
-    }
-
-    .sidebar-header {
-        display: none; /* Hide header on very small screens to save space */
-    }
-
-    .sidebar-nav ul {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        width: 100%;
-    }
-
-    .admin-content {
-        padding-bottom: 80px; /* Add padding to prevent content from being hidden by fixed sidebar */
-    }
-
-    .sidebar-nav a {
-        flex-direction: column; /* Stack icon and text */
-        font-size: 0.65rem; /* Even smaller font size */
-        gap: 0.1rem;
-        padding: 0.5rem 0.25rem;
-    }
-
-    .admin-content h1 {
-        font-size: 1.5rem;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr; /* Stack cards on very small screens */
-    }
+.admin-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  box-shadow: var(--shadow-soft);
+  background:#fff;
+  overflow:hidden;
 }
 
+/* give thead top rounded corners */
+.admin-table thead th{
+  padding: 0.9rem 1.25rem;
+  background: rgba(90,46,152,0.08);
+  color: var(--clr-primary);
+  text-align:left;
+  font-weight:700;
+  font-size:0.95rem;
+  border-bottom:1px solid rgba(90,46,152,0.06);
+}
+
+/* round only the first and last th corners */
+.admin-table thead th:first-child{
+  border-top-left-radius: 14px;
+}
+.admin-table thead th:last-child{
+  border-top-right-radius: 14px;
+}
+
+.admin-table tbody td{
+  padding: 0.95rem 1.25rem;
+  background:#fff;
+  font-size:0.95rem;
+  color:#333;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+/* round the bottom corners of the table by applying to the last row's cells */
+.admin-table tbody tr:last-child td:first-child{
+  border-bottom-left-radius: 14px;
+}
+.admin-table tbody tr:last-child td:last-child{
+  border-bottom-right-radius: 14px;
+  border-bottom: none;
+}
+
+/* hover row */
+.admin-table tbody tr:hover td{
+  background: rgba(242,233,254,0.45);
+}
+
+/* keep action column contents from wrapping */
+.admin-table td.actions{
+  white-space:nowrap;
+}
+
+/* responsive small screens: reduce padding */
+@media (max-width: 1100px){
+  .stats-grid{
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 820px){
+  .stats-grid{
+    grid-template-columns: 1fr;
+  }
+  .admin-content{
+    padding:1.25rem;
+  }
+}
+
+/* ----------------------------------------
+   STATUS BADGES
+----------------------------------------- */
+.status-badge{
+  display:inline-flex;
+  align-items:center;
+  padding:0.28rem 0.7rem;
+  border-radius:999px;
+  font-weight:700;
+  font-size:0.85rem;
+}
+
+/* map common statuses */
+.status-pending{ background: rgba(255,184,0,0.14); color:#a16900; }
+.status-processing{ background: rgba(90,46,152,0.12); color:var(--clr-primary); }
+.status-shipped, .status-completed{ background: rgba(46,204,113,0.12); color:#0e8a46; }
+.status-cancelled{ background: rgba(231,76,60,0.12); color:#c0392b; }
+
+/* ----------------------------------------
+   BUTTONS
+----------------------------------------- */
+.btn{
+  display:inline-block;
+  padding:0.55rem 0.9rem;
+  border-radius:999px;
+  font-weight:700;
+  text-decoration:none;
+  border:none;
+  cursor:pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  font-size:0.9rem;
+}
+
+.btn:focus{ outline: 3px solid rgba(90,46,152,0.18) ; outline-offset: 2px; }
+
+.btn-primary{
+  background:var(--clr-primary);
+  color:#fff;
+  box-shadow: 0 6px 18px rgba(90,46,152,0.08);
+}
+
+.btn-primary:hover{ background:var(--clr-primary-dark); transform: translateY(-2px); }
+
+.btn-sm{
+  padding:0.4rem 0.7rem;
+  font-size:0.85rem;
+}
+
+/* Action pill used in table (purple outline variant) */
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(90,46,152,0.12);
+  color: var(--clr-primary);
+}
+
+/* ----------------------------------------
+   FORMS / ADMIN FORM
+----------------------------------------- */
+.admin-form{
+  background:#fff;
+  padding:1.5rem;
+  border-radius:14px;
+  box-shadow: var(--shadow-soft);
+  max-width:900px;
+}
+
+/* form controls */
+.admin-form label{ display:block; margin-bottom:0.4rem; font-weight:700; }
+.admin-form input, .admin-form select, .admin-form textarea{
+  width:100%;
+  padding:0.7rem 0.9rem;
+  border-radius:10px;
+  border:1px solid #dcdcdc;
+  margin-bottom:0.9rem;
+}
+
+/* focus ring */
+.admin-form input:focus, .admin-form select:focus, .admin-form textarea:focus{
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 4px rgba(90,46,152,0.09);
+  outline:none;
+}
+
+/* ----------------------------------------
+   RESPONSIVE SIDEBAR: collapse to left icon bar
+----------------------------------------- */
+@media (max-width: 992px){
+  :root{ --sidebar-w: var(--sidebar-w-collapsed); } /* change used width value for content shift */
+  .admin-sidebar{
+    width: var(--sidebar-w-collapsed);
+  }
+  .admin-content{
+    margin-left: var(--sidebar-w-collapsed);
+  }
+
+  /* hide title, keep icons centered if your markup uses <span class="label"> text */
+  .sidebar-header h2{ display:none; }
+  .sidebar-nav a{ justify-content:center; padding:0.9rem 0.5rem; font-size:0.82rem; }
+  .sidebar-nav a span.label{ display:none; }
+}
+
+/* mobile bottom nav pattern */
+@media (max-width: 600px){
+  .admin-sidebar{
+    position: fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:auto;
+    width:100%;
+    padding:0.35rem 0;
+    flex-direction:row;
+    align-items:center;
+  }
+  .admin-content{
+    margin-left:0;
+    padding-bottom:80px;
+  }
+  .sidebar-nav ul{ display:flex; gap:0.25rem; width:100%; justify-content:space-around; }
+  .sidebar-header{ display:none; }
+}
+
+/* ----------------------------------------
+   SMALL UTILITIES
+----------------------------------------- */
+.text-muted{ color:#777; font-size:0.9rem; }
+.small{ font-size:0.85rem; color:var(--clr-muted); }
+.align-right{ text-align:right; }
+
+/* ----------------------------------------
+   END
+----------------------------------------- */

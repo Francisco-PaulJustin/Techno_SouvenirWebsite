@@ -60,11 +60,11 @@ if (!empty($cart)) {
                                         <img src="assets/images/products/<?php echo htmlspecialchars($item['product']['image']); ?>" alt="<?php echo htmlspecialchars($item['product']['name']); ?>">
                                         <span><?php echo htmlspecialchars($item['product']['name']); ?></span>
                                     </td>
-                                    <td>$<?php echo number_format($item['product']['price'], 2); ?></td>
+                                    <td>₱<?php echo number_format($item['product']['price'], 2); ?></td>
                                     <td>
                                         <input type="number" class="quantity-input" data-product-id="<?php echo $item['product']['id']; ?>" value="<?php echo $item['quantity']; ?>" min="1" max="<?php echo $item['product']['stock']; ?>">
                                     </td>
-                                    <td>$<?php echo number_format($item['subtotal'], 2); ?></td>
+                                    <td>₱<?php echo number_format($item['subtotal'], 2); ?></td>
                                     <td>
                                         <button class="btn ghost-btn remove-from-cart" data-product-id="<?php echo $item['product']['id']; ?>">Remove</button>
                                     </td>
@@ -74,7 +74,7 @@ if (!empty($cart)) {
                         <tfoot>
                             <tr>
                                 <td colspan="3"><strong>Total:</strong></td>
-                                <td><strong>$<?php echo number_format($total, 2); ?></strong></td>
+                                <td><strong>₱<?php echo number_format($total, 2); ?></strong></td>
                                 <td></td>
                             </tr>
                         </tfoot>

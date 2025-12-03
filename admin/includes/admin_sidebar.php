@@ -6,6 +6,7 @@
         <ul>
             <li><a href="index.php">Dashboard</a></li>
             <li><a href="add_product.php">Add Product</a></li>
+            <li><a href="product_list.php">Product List</a></li>
             <li><a href="manage_orders.php">Manage Orders</a></li>
             <li><a href="manage_users.php">Manage Users</a></li>
             <li><a href="../index.php">View Website</a></li>

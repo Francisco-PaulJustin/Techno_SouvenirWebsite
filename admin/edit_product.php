@@ -69,7 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
 $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="../assets/css/admin.css">
+<div class="admin-content">
 <div class="admin-content">
     <h1>Edit Product</h1>
     
@@ -134,6 +137,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <button type="submit" class="btn btn-primary">Update Product</button>
     </form>
 </div>
-
+<a href="product_list.php" class="btn btn-secondary">Back to Product List</a>
 <?php require_once 'includes/admin_footer.php'; ?>
 
+</html>

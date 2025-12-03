@@ -29,12 +29,12 @@ require_once 'includes/navbar.php';
         <div class="container">
             <div class="product-detail" data-animate>
                 <div class="product-image">
-                    <img src="assets/images/products/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    <img src="admin/uploads/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                 </div>
                 
                 <div class="product-info">
                     <h1><?php echo htmlspecialchars($product['name']); ?></h1>
-                    <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                    <p class="product-price">₱<?php echo number_format($product['price'], 2); ?></p>
                     <p class="product-description"><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
                     
                     <form class="add-to-cart-form" method="POST" action="api/add_to_cart.php">

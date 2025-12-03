@@ -54,9 +54,9 @@ $total_pages = ceil($total_products / $per_page);
                 if ($products) {
                     foreach ($products as $product) {
                         echo '<div class="product-card" data-animate>';
-                        echo '<img src="assets/images/products/' . htmlspecialchars($product['image']) . '" alt="' . htmlspecialchars($product['name']) . '">';
+                        echo '<img src="admin/uploads/' . htmlspecialchars($product['image']) . '" alt="' . htmlspecialchars($product['name']) . '">';
                         echo '<h3>' . htmlspecialchars($product['name']) . '</h3>';
-                        echo '<p class="price">$' . number_format($product['price'], 2) . '</p>';
+                        echo '<p class="price">₱' . number_format($product['price'], 2) . '</p>';
                         echo '<a href="product_view.php?id=' . $product['id'] . '" class="btn ghost-btn">View Details</a>';
                         echo '</div>';
                     }

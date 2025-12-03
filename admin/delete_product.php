@@ -21,6 +21,7 @@ if ($product_id) {
     }
 }
 
+
 header('Location: index.php');
 exit;
 ?>
