@@ -43,47 +43,53 @@ if (!empty($cart)) {
                 </div>
             <?php else: ?>
                 <div class="cart-items">
-                    <table class="cart-table" data-animate>
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Subtotal</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($cart_items as $item): ?>
+                    <form action="checkout.php" method="POST">
+                        <table class="cart-table" data-animate>
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <img src="assets/images/products/<?php echo htmlspecialchars($item['product']['image']); ?>" alt="<?php echo htmlspecialchars($item['product']['name']); ?>">
-                                        <span><?php echo htmlspecialchars($item['product']['name']); ?></span>
-                                    </td>
-                                    <td>₱<?php echo number_format($item['product']['price'], 2); ?></td>
-                                    <td>
-                                        <input type="number" class="quantity-input" data-product-id="<?php echo $item['product']['id']; ?>" value="<?php echo $item['quantity']; ?>" min="1" max="<?php echo $item['product']['stock']; ?>">
-                                    </td>
-                                    <td>₱<?php echo number_format($item['subtotal'], 2); ?></td>
-                                    <td>
-                                        <button class="btn ghost-btn remove-from-cart" data-product-id="<?php echo $item['product']['id']; ?>">Remove</button>
-                                    </td>
+                                    <th>Select</th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                    <th>Action</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="3"><strong>Total:</strong></td>
-                                <td><strong>₱<?php echo number_format($total, 2); ?></strong></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                    
-                    <div class="cart-actions">
-                        <a href="products.php" class="btn ghost-btn">Continue Shopping</a>
-                        <a href="checkout.php" class="btn gradient-btn">Proceed to Checkout</a>
-                    </div>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($cart_items as $item): ?>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="selected_products[]" value="<?= $item['product']['id'] ?>" checked>
+                                        </td>
+                                        <td>
+                                            <img src="assets/images/products/<?php echo htmlspecialchars($item['product']['image']); ?>" alt="<?php echo htmlspecialchars($item['product']['name']); ?>">
+                                            <span><?php echo htmlspecialchars($item['product']['name']); ?></span>
+                                        </td>
+                                        <td>₱<?php echo number_format($item['product']['price'], 2); ?></td>
+                                        <td>
+                                            <input type="number" class="quantity-input" data-product-id="<?php echo $item['product']['id']; ?>" value="<?php echo $item['quantity']; ?>" min="1" max="<?php echo $item['product']['stock']; ?>">
+                                        </td>
+                                        <td>₱<?php echo number_format($item['subtotal'], 2); ?></td>
+                                        <td>
+                                            <button class="btn ghost-btn remove-from-cart" type="button" data-product-id="<?php echo $item['product']['id']; ?>">Remove</button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4"><strong>Total:</strong></td>
+                                    <td><strong>₱<?php echo number_format($total, 2); ?></strong></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        
+                        <div class="cart-actions">
+                            <a href="products.php" class="btn ghost-btn">Continue Shopping</a>
+                            <button type="submit" class="btn gradient-btn">Proceed to Checkout</button>
+                        </div>
+                    </form>
                 </div>
             <?php endif; ?>
         </div>

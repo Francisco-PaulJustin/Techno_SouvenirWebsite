@@ -1,28 +1,28 @@
 <?php
 session_start();
 
-// Check if user is logged in
-if (isset($_SESSION['user_role'])) {
-    // If admin, redirect to admin login page after logout
-    if ($_SESSION['user_role'] === 'admin') {
-        session_unset();
-        session_destroy();
-        header('Location: login.php'); // Redirect to main login page
-        exit;
-    } else {
-        // For customers or other roles, redirect to the main index page
-        session_unset();
-        session_destroy();
-        header('Location: index.php');
-        exit;
-    }
-} else {
-    // If no session or role, simply destroy session and redirect to index
-    session_unset();
-    session_destroy();
-    header('Location: index.php');
-    exit;
+// Store role before clearing session for redirect decision
+$user_role = $_SESSION['user_role'] ?? null;
+
+// Clear all session variables
+$_SESSION = array();
+
+// Destroy the session cookie
+if (isset($_COOKIE[session_name()])) {
+    setcookie(session_name(), '', time() - 3600, '/');
 }
 
+// Destroy the session
+session_destroy();
+
+// Redirect based on previous role
+if ($user_role === 'admin') {
+    // Admin logged out, redirect to login page
+    header('Location: login.php');
+} else {
+    // Customer or other role logged out, redirect to index
+    header('Location: index.php');
+}
+exit;
 ?>
 

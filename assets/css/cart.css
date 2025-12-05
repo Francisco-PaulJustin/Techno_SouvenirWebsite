@@ -27,6 +27,15 @@
     text-align: left;
 }
 
+.cart-table td input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #5A2E98; /* Customizing checkbox color */
+    cursor: pointer;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
 .cart-table tbody tr {
     border-bottom: 1px solid rgba(90, 46, 152, 0.08);
     transition: background 0.3s ease;

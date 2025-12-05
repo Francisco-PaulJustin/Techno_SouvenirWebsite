@@ -1,13 +1,10 @@
 <?php
 session_start();
 require_once 'includes/config.php';
+require_once 'includes/auth.php';
 
-// Check if user is logged in and is a customer
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'customer') {
-    // Redirect to login page if not logged in or not a customer
-    header('Location: login.php');
-    exit;
-}
+// Prevent admins from accessing customer interface
+requireCustomer();
 
 $page_title = 'Customer Dashboard';
 require_once 'includes/header.php';

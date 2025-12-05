@@ -137,6 +137,12 @@ img {
     text-decoration: none;
 }
 
+.logo {
+    max-height: 100px; /* Adjust as needed */
+    width: auto;
+    vertical-align: middle;
+}
+
 .nav-menu {
     display: flex;
     list-style: none;
@@ -465,7 +471,21 @@ img {
 }
 
 .checkout-content {
-    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr); /* Keep original grid layout */
+    align-items: start; /* Align items to the start of the grid, prevents stretching */
+}
+
+.order-summary {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    /* Remove any fixed heights or max-heights if they were here */
+    /* min-height: fit-content; */ /* Ensure it takes at least the content height */
 }
 
 .order-item {
@@ -473,6 +493,11 @@ img {
     justify-content: space-between;
     padding: 0.5rem 0;
     border-bottom: 1px solid rgba(90, 46, 152, 0.1);
+    flex-wrap: wrap; /* Allow items to wrap if content is too long */
+}
+
+.order-item span {
+    word-break: break-word; /* Allow long words to break */
 }
 
 .order-total {
@@ -737,6 +762,10 @@ textarea.is-invalid {
     .checkout-content {
         grid-template-columns: 1fr;
     }
+
+    .order-summary {
+        width: 100%;
+    }
 }
 
 @media (max-width: 600px) {
@@ -765,5 +794,10 @@ textarea.is-invalid {
     .order-summary {
         padding: 1.4rem;
     }
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
 }
 

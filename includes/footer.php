@@ -27,8 +27,8 @@
                 </div>
                 <div class="footer-section">
                     <h3>Contact</h3>
-                    <p>Email: info@souvenirshop.com</p>
-                    <p>Phone: +1 (555) 123-4567</p>
+                    <p>Email: memocraft@gmail.com</p>
+                    <p>Phone: +63 0999 123 456</p>
                 </div>
             </div>
             <div class="footer-bottom">

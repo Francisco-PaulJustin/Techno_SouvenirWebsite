@@ -1,7 +1,8 @@
 <nav class="navbar">
     <div class="container">
         <div class="nav-brand">
-            <a href="index.php"><?php echo SITE_NAME; ?></a>
+            <a href="index.php"><img src="assets/images/logo.png" alt="<?php echo SITE_NAME; ?> Logo" class="logo"></a>
+            <span style="font-size: 1.5rem; font-weight: bold; color: #333; margin-left: 0.5rem;">MemoCraft</span>
         </div>
         <ul class="nav-menu">
             <li><a href="index.php">Home</a></li>
@@ -11,8 +12,12 @@
             <li><a href="contact.php">Contact</a></li>
         </ul>
         <div class="nav-actions">
-            <a href="cart.php" class="cart-link nav-btn">Cart (<span id="cart-count">0</span>)</a>
-            <?php if (isset($_SESSION['user_id'])): ?>
+            <?php 
+            // Only show user interface elements for customers, not admins
+            $is_customer = isset($_SESSION['user_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'customer';
+            ?>
+            <?php if ($is_customer): ?>
+                <a href="cart.php" class="cart-link nav-btn">Cart (<span id="cart-count">0</span>)</a>
                 <div class="nav-profile">
                     <?php
                         $first_name = $_SESSION['user_first_name'] ?? ($_SESSION['user_name'] ?? 'User');
@@ -34,6 +39,9 @@
                         <a href="logout.php" class="logout-link">Logout</a>
                     </div>
                 </div>
+            <?php elseif (isset($_SESSION['user_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                <!-- Admin is logged in - don't show user interface elements -->
+                <!-- Admin should use admin interface, not user interface -->
             <?php else: ?>
                 <a href="login.php" class="nav-btn ghost-btn">Login</a>
                 <a href="signup.php" class="nav-btn primary-btn">Sign Up</a>

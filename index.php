@@ -1,6 +1,11 @@
 <?php
 session_start();
 require_once 'includes/config.php';
+require_once 'includes/auth.php';
+
+// Redirect admins to admin interface if they try to access public pages
+redirectAdminIfLoggedIn();
+
 $page_title = 'Home';
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';

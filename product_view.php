@@ -1,6 +1,10 @@
 <?php
 session_start();
 require_once 'includes/config.php';
+require_once 'includes/auth.php';
+
+// Redirect admins to admin interface if they try to access public pages
+redirectAdminIfLoggedIn();
 
 $product_id = $_GET['id'] ?? null;
 
@@ -44,8 +48,21 @@ require_once 'includes/navbar.php';
                             <input type="number" id="quantity" name="quantity" value="1" min="1" max="<?php echo $product['stock']; ?>">
                         </div>
                         <button type="submit" class="btn gradient-btn">Add to Cart</button>
+                        <button type="button" class="btn ghost-btn" id="buy-now-button">Buy Now</button>
                         <div class="cart-inline-message" id="cart-inline-message"></div>
                     </form>
+                    
+                    <?php
+                    // Display success/error messages from session (fallback for non-JS users or direct form submission)
+                    if (isset($_SESSION['cart_success'])) {
+                        echo '<div class="alert alert-success" style="margin-top: 1rem;">' . htmlspecialchars($_SESSION['cart_success']) . '</div>';
+                        unset($_SESSION['cart_success']);
+                    }
+                    if (isset($_SESSION['cart_error'])) {
+                        echo '<div class="alert alert-error" style="margin-top: 1rem;">' . htmlspecialchars($_SESSION['cart_error']) . '</div>';
+                        unset($_SESSION['cart_error']);
+                    }
+                    ?>
                     
                     <div class="product-meta">
                         <p><strong>Stock:</strong> <?php echo $product['stock']; ?> available</p>
