@@ -145,9 +145,9 @@ try {
     
     $pdo->commit();
     
-    // Set success message in session and redirect to profile with order ID
+    // Set success message in session and redirect to orders page with order ID
     $_SESSION['order_success'] = 'Order placed successfully!';
-    header('Location: ../profile.php?order_success=true&order_id=' . $order_id);
+    header('Location: ../orders.php?order_success=true&order_id=' . $order_id);
     exit();
 
 } catch (Exception $e) {

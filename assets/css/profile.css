@@ -189,6 +189,39 @@
 }
 
 /* =========================================
+   ORDERS PAGE HEADER
+========================================= */
+.orders-page-header {
+    margin-bottom: 2rem;
+    text-align: center;
+    padding: 2.5rem 2rem;
+}
+
+.orders-header-content h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #0f0b14;
+}
+
+.orders-subtitle {
+    color: #666;
+    font-size: 1rem;
+}
+
+.empty-orders {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.empty-orders p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+/* =========================================
    ORDER HISTORY
 ========================================= */
 .order-history {

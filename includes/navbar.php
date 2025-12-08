@@ -18,6 +18,7 @@
             ?>
             <?php if ($is_customer): ?>
                 <a href="cart.php" class="cart-link nav-btn">Cart (<span id="cart-count">0</span>)</a>
+                <a href="orders.php" class="orders-link nav-btn">Orders</a>
                 <div class="nav-profile">
                     <?php
                         $first_name = $_SESSION['user_first_name'] ?? ($_SESSION['user_name'] ?? 'User');

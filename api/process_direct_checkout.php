@@ -75,8 +75,8 @@ try {
 
     $pdo->commit();
 
-    // Redirect to profile page with success message
-    header('Location: ../profile.php?order_success=true');
+    // Redirect to orders page with success message
+    header('Location: ../orders.php?order_success=true&order_id=' . $order_id);
     exit();
 
 } catch (Exception $e) {
