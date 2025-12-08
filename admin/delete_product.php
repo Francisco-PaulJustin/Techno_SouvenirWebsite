@@ -22,7 +22,7 @@ if ($product_id) {
 }
 
 
-header('Location: index.php');
+header('Location: product_list.php?deleted=1');
 exit;
 ?>
 
