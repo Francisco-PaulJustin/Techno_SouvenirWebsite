@@ -62,7 +62,7 @@ if (!empty($cart)) {
                                             <input type="checkbox" name="selected_products[]" value="<?= $item['product']['id'] ?>" checked>
                                         </td>
                                         <td>
-                                            <img src="assets/images/products/<?php echo htmlspecialchars($item['product']['image']); ?>" alt="<?php echo htmlspecialchars($item['product']['name']); ?>">
+                                            <img src="admin/uploads/<?php echo htmlspecialchars($item['product']['image']); ?>" alt="<?php echo htmlspecialchars($item['product']['name']); ?>">
                                             <span><?php echo htmlspecialchars($item['product']['name']); ?></span>
                                         </td>
                                         <td>₱<?php echo number_format($item['product']['price'], 2); ?></td>

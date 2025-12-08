@@ -1,73 +1,166 @@
+/* ============================================
+   SHOPPING CART PAGE STYLES
+   ============================================ */
+
 .cart-section {
     padding: 3rem 0;
 }
 
+.cart-section h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--clr-text);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Empty Cart State */
 .empty-cart {
     text-align: center;
-    padding: 4rem 0;
+    padding: 5rem 2rem;
+    background: #fff;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
 }
 
+.empty-cart p {
+    font-size: 1.1rem;
+    color: var(--clr-muted);
+    margin-bottom: 2rem;
+}
+
+/* Cart Table */
 .cart-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     background: #fff;
-    border-radius: 24px;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-strong);
-}
-
-.cart-table thead {
-    background: linear-gradient(135deg, rgba(90, 46, 152, 0.95), rgba(255, 184, 0, 0.85));
-    color: #fff;
-}
-
-.cart-table th,
-.cart-table td {
-    padding: 1.25rem;
-    text-align: left;
-}
-
-.cart-table td input[type="checkbox"] {
-    width: 20px;
-    height: 20px;
-    accent-color: #5A2E98; /* Customizing checkbox color */
-    cursor: pointer;
-    vertical-align: middle;
-    margin-right: 0.5rem;
-}
-
-.cart-table tbody tr {
-    border-bottom: 1px solid rgba(90, 46, 152, 0.08);
-    transition: background 0.3s ease;
-}
-
-.cart-table tbody tr:hover {
-    background: rgba(242, 233, 254, 0.35);
-}
-
-.cart-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.cart-table img {
-    width: 86px;
-    height: 86px;
-    object-fit: cover;
-    border-radius: 16px;
-    margin-right: 1rem;
-    vertical-align: middle;
     box-shadow: var(--shadow-soft);
 }
 
-.quantity-input {
-    width: 90px;
-    padding: 0.65rem;
-    border: 1px solid rgba(90, 46, 152, 0.2);
-    border-radius: 16px;
-    text-align: center;
-    font-weight: 600;
+.cart-table thead {
+    background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-primary-light) 100%);
+    color: #fff;
 }
 
+.cart-table th {
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.cart-table td {
+    padding: 1.25rem 1.5rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--clr-border);
+}
+
+.cart-table tbody tr {
+    transition: background var(--transition-fast);
+}
+
+.cart-table tbody tr:hover {
+    background: rgba(90, 46, 152, 0.03);
+}
+
+.cart-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Checkbox Styling */
+.cart-table td input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--clr-primary);
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+/* Product Cell with Image */
+.cart-table td img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    margin-right: 1rem;
+    vertical-align: middle;
+    box-shadow: var(--shadow-sm);
+    opacity: 1;
+    transition: transform var(--transition);
+}
+
+.cart-table td img:hover {
+    transform: scale(1.05);
+}
+
+.cart-table td span {
+    font-weight: 500;
+    color: var(--clr-text);
+}
+
+/* Price Cell */
+.cart-table td:nth-child(3) {
+    font-weight: 600;
+    color: var(--clr-primary);
+}
+
+/* Quantity Input */
+.quantity-input {
+    width: 80px;
+    padding: 0.6rem 0.75rem;
+    border: 2px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all var(--transition-fast);
+    background: var(--clr-bg-light);
+}
+
+.quantity-input:focus {
+    outline: none;
+    border-color: var(--clr-primary);
+    box-shadow: 0 0 0 4px rgba(90, 46, 152, 0.12);
+    background: #fff;
+}
+
+/* Subtotal Cell */
+.cart-table td:nth-child(5) {
+    font-weight: 700;
+    color: var(--clr-text);
+}
+
+/* Table Footer */
+.cart-table tfoot {
+    background: var(--clr-bg-light);
+}
+
+.cart-table tfoot td {
+    padding: 1.5rem;
+    border-bottom: none;
+}
+
+.cart-table tfoot strong {
+    font-size: 1.25rem;
+    color: var(--clr-primary);
+}
+
+/* Remove Button */
+.remove-from-cart {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.85rem !important;
+    border-radius: var(--radius-full) !important;
+}
+
+/* Cart Actions */
 .cart-actions {
     margin-top: 2rem;
     display: flex;
@@ -77,6 +170,55 @@
 }
 
 .cart-actions .btn {
-    padding: 1rem 2.5rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
 }
 
+/* Responsive */
+@media (max-width: 992px) {
+    .cart-table th,
+    .cart-table td {
+        padding: 1rem;
+    }
+    
+    .cart-table td img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .cart-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .cart-table th,
+    .cart-table td {
+        padding: 0.85rem;
+        white-space: nowrap;
+    }
+    
+    .cart-table td img {
+        width: 50px;
+        height: 50px;
+        margin-right: 0.75rem;
+    }
+    
+    .quantity-input {
+        width: 70px;
+        padding: 0.5rem;
+    }
+    
+    .cart-actions {
+        flex-direction: column;
+    }
+    
+    .cart-actions .btn {
+        width: 100%;
+    }
+}

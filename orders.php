@@ -64,7 +64,7 @@ foreach ($user_orders as &$order) {
             $pname = $parts[3] ?? null;
             $pimage = $parts[4] ?? null;
             
-            $image_url = !empty($pimage) ? 'uploads/' . $pimage : 'assets/images/placeholder.png';
+            $image_url = !empty($pimage) ? 'admin/uploads/' . $pimage : 'assets/images/placeholder.png';
 
             $order['items_data'][] = [
                 'product_id' => $pid,

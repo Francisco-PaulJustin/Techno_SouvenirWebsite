@@ -115,9 +115,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 $pdo->commit();
                 
-                // Redirect to profile page with success message and order ID
+                // Redirect to orders page with success message and order ID
                 $_SESSION['order_success'] = 'Order placed successfully!';
-                header('Location: profile.php?order_success=true&order_id=' . $order_id);
+                header('Location: orders.php?order_success=true&order_id=' . $order_id);
                 exit;
             } catch (Exception $e) {
                 $pdo->rollBack();
