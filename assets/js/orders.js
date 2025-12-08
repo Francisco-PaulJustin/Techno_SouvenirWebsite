@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const orderHistorySection = document.getElementById('orderHistory');
 
-    // Handle URL parameters for order success redirect
+    // Get URL parameters
     const urlParams = new URLSearchParams(window.location.search);
     const orderSuccess = urlParams.get('order_success');
     const orderId = urlParams.get('order_id');
@@ -133,4 +133,3 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
