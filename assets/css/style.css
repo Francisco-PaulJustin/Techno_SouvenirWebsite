@@ -1145,6 +1145,85 @@ textarea.is-invalid {
 }
 
 /* ============================================
+   ADMIN PREVIEW BANNER
+   ============================================ */
+.admin-preview-banner {
+    background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-primary-dark) 100%);
+    color: #fff;
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    box-shadow: 0 2px 10px rgba(90, 46, 152, 0.2);
+}
+
+.admin-preview-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.admin-preview-icon {
+    font-size: 1.2rem;
+}
+
+.admin-preview-text {
+    flex: 1;
+}
+
+.admin-preview-text a {
+    color: var(--clr-accent);
+    text-decoration: underline;
+    font-weight: 600;
+    margin-left: 0.25rem;
+}
+
+.admin-preview-text a:hover {
+    color: #fff;
+}
+
+.admin-preview-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.25rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.admin-preview-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 600px) {
+    .admin-preview-content {
+        font-size: 0.8rem;
+        gap: 0.5rem;
+    }
+
+    .admin-preview-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .admin-preview-close {
+        width: 24px;
+        height: 24px;
+        font-size: 1.1rem;
+    }
+}
+
+/* ============================================
    MOBILE MENU TOGGLE BUTTON
    ============================================ */
 .mobile-menu-toggle {
@@ -1204,6 +1283,10 @@ body.mobile-menu-active {
 @media (max-width: 992px) {
     .mobile-menu-toggle {
         display: flex;
+    }
+
+    .admin-preview-banner ~ .navbar .nav-menu {
+        top: calc(70px + 50px);
     }
 
     .nav-menu {

@@ -1,3 +1,9 @@
+<?php
+// Include auth.php to ensure isAdmin() function is available
+if (!function_exists('isAdmin')) {
+    require_once __DIR__ . '/auth.php';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,4 +26,15 @@ $body_class = $body_class ?? '';
 $is_logged_in = isset($_SESSION['user_id']);
 ?>
 <body class="app-body <?php echo htmlspecialchars($body_class); ?>" data-logged-in="<?php echo $is_logged_in ? '1' : '0'; ?>">
+    <?php if (isset($_SESSION['admin_viewing_site']) && function_exists('isAdmin') && isAdmin()): ?>
+        <div class="admin-preview-banner">
+            <div class="container">
+                <div class="admin-preview-content">
+                    <span class="admin-preview-icon">👁️</span>
+                    <span class="admin-preview-text">You are viewing the website as an admin. <a href="admin/index.php">Return to Admin Panel</a></span>
+                    <button class="admin-preview-close" onclick="this.closest('.admin-preview-banner').style.display='none'" aria-label="Close banner">×</button>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 

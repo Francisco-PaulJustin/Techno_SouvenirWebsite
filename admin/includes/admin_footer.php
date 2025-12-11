@@ -106,6 +106,7 @@
             });
         }
         
+        
         // Auto-dismiss alerts after 5 seconds
         const alerts = document.querySelectorAll('.alert');
         alerts.forEach(function(alert) {

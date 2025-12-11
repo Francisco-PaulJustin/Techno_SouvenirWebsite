@@ -49,8 +49,12 @@
                     </div>
                 </div>
             <?php elseif (isset($_SESSION['user_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-                <!-- Admin is logged in - don't show user interface elements -->
-                <!-- Admin should use admin interface, not user interface -->
+                <!-- Admin viewing site in preview mode -->
+                <?php if (isset($_SESSION['admin_viewing_site'])): ?>
+                    <a href="admin/index.php" class="nav-btn btn-secondary" title="Return to Admin Panel">
+                        <span>← Admin Panel</span>
+                    </a>
+                <?php endif; ?>
             <?php else: ?>
                 <a href="login.php" class="nav-btn ghost-btn">Login</a>
                 <a href="signup.php" class="nav-btn primary-btn">Sign Up</a>

@@ -3,6 +3,12 @@ session_start();
 require_once '../includes/config.php';
 require_once 'includes/admin_auth.php';
 
+// Always clear admin viewing session flag when accessing admin panel
+// This ensures admin panel works normally
+if (isset($_SESSION['admin_viewing_site'])) {
+    unset($_SESSION['admin_viewing_site']);
+}
+
 $page_title = 'Dashboard';
 
 // Get statistics
