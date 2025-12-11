@@ -226,10 +226,10 @@ require_once 'includes/admin_header.php';
                                                 onclick="openEditModal(<?php echo htmlspecialchars(json_encode($category)); ?>)">
                                             <span class="material-icons-round">edit</span>
                                         </button>
-                                        <form method="POST" action="manage_categories.php" style="display: inline;" 
-                                              onsubmit="return confirm('Are you sure you want to delete this category? This action cannot be undone.');">
+                                        <form method="POST" action="manage_categories.php" style="display: inline;" id="delete-category-form-<?php echo $category['id']; ?>">
                                             <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                                            <button type="submit" name="delete_category" class="btn btn-danger btn-sm" title="Delete">
+                                            <button type="button" name="delete_category" class="btn btn-danger btn-sm" title="Delete"
+                                                    onclick="handleDeleteCategory(<?php echo $category['id']; ?>, 'Are you sure you want to delete this category? This action cannot be undone.');">
                                                 <span class="material-icons-round">delete</span>
                                             </button>
                                         </form>
@@ -333,6 +333,14 @@ function closeEditModal() {
     const modal = document.getElementById('editModal');
     modal.style.display = 'none';
     document.querySelector('#editModal form').reset();
+}
+
+// Handle delete category with custom confirm
+async function handleDeleteCategory(categoryId, message) {
+    const confirmed = await customConfirm(message);
+    if (confirmed) {
+        document.getElementById('delete-category-form-' + categoryId).submit();
+    }
 }
 
 // Close modals when clicking outside

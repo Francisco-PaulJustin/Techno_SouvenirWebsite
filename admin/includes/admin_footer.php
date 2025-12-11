@@ -1,6 +1,7 @@
         </div><!-- /.admin-content -->
     </div><!-- /.admin-wrapper -->
     
+    <script src="../assets/js/popup.js"></script>
     <script>
     // Sidebar toggle functionality (mobile and desktop collapse)
     document.addEventListener('DOMContentLoaded', function() {

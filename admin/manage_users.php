@@ -172,10 +172,10 @@ require_once 'includes/admin_header.php';
                                     <td class="text-muted"><?php echo date('M d, Y', strtotime($user['created_at'])); ?></td>
                                     <td class="cell-actions">
                                         <?php if ($user['id'] != $_SESSION['user_id']): ?>
-                                            <form method="POST" action="manage_users.php" style="display: inline;" 
-                                                  onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+                                            <form method="POST" action="manage_users.php" style="display: inline;" id="delete-user-form-<?php echo $user['id']; ?>">
                                                 <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                                                <button type="submit" name="delete_user" class="btn btn-danger btn-sm" title="Delete User">
+                                                <button type="button" name="delete_user" class="btn btn-danger btn-sm" title="Delete User"
+                                                        onclick="handleDeleteUser(<?php echo $user['id']; ?>, 'Are you sure you want to delete this user? This action cannot be undone.');">
                                                     <span class="material-icons-round">delete</span>
                                                 </button>
                                             </form>
@@ -190,5 +190,15 @@ require_once 'includes/admin_header.php';
                 </table>
             </div>
         </div>
+
+<script>
+// Handle delete user with custom confirm
+async function handleDeleteUser(userId, message) {
+    const confirmed = await customConfirm(message);
+    if (confirmed) {
+        document.getElementById('delete-user-form-' + userId).submit();
+    }
+}
+</script>
 
 <?php require_once 'includes/admin_footer.php'; ?>

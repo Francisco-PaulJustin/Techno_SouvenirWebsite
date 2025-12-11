@@ -37,17 +37,18 @@ function updateCartQuantity(productId, quantity) {
         if (data.success) {
             location.reload();
         } else {
-            alert('Error updating quantity: ' + (data.message || 'Unknown error'));
+            customAlert('Error updating quantity: ' + (data.message || 'Unknown error'), 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error updating quantity');
+        customAlert('Error updating quantity', 'error');
     });
 }
 
-function removeFromCart(productId) {
-    if (!confirm('Are you sure you want to remove this item from your cart?')) {
+async function removeFromCart(productId) {
+    const confirmed = await customConfirm('Are you sure you want to remove this item from your cart?');
+    if (!confirmed) {
         return;
     }
     
@@ -65,12 +66,12 @@ function removeFromCart(productId) {
         if (data.success) {
             location.reload();
         } else {
-            alert('Error removing item: ' + (data.message || 'Unknown error'));
+            customAlert('Error removing item: ' + (data.message || 'Unknown error'), 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error removing item');
+        customAlert('Error removing item', 'error');
     });
 }
 

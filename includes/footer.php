@@ -37,6 +37,7 @@
         </div>
     </footer>
 
+    <script src="assets/js/popup.js"></script>
     <script src="assets/js/main.js"></script>
     <?php if (isset($additional_js)): ?>
         <?php foreach ($additional_js as $js): ?>

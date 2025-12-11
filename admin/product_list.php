@@ -132,7 +132,7 @@ require_once 'includes/admin_header.php';
                                         <a href="delete_product.php?id=<?php echo $product['id']; ?>" 
                                            class="btn btn-danger btn-sm"
                                            title="Delete"
-                                           onclick="return confirm('Are you sure you want to delete this product?')">
+                                           onclick="event.preventDefault(); handleDeleteProduct(this.href, 'Are you sure you want to delete this product?'); return false;">
                                             <span class="material-icons-round">delete</span>
                                         </a>
                                     </td>
@@ -143,5 +143,15 @@ require_once 'includes/admin_header.php';
                 </table>
             </div>
         </div>
+
+<script>
+// Handle delete product with custom confirm
+async function handleDeleteProduct(url, message) {
+    const confirmed = await customConfirm(message);
+    if (confirmed) {
+        window.location.href = url;
+    }
+}
+</script>
 
 <?php require_once 'includes/admin_footer.php'; ?>
