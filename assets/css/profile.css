@@ -559,16 +559,67 @@
 /* =========================================
    MOBILE RESPONSIVE FIXES
 ========================================= */
+@media (max-width: 992px) {
+    .profile-main {
+        padding: 2rem 0;
+    }
+
+    .profile-header {
+        gap: 1.5rem;
+    }
+
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
+    .profile-main {
+        padding: 1.5rem 0;
+    }
+
     .profile-header {
         flex-direction: column;
         text-align: center;
-        gap: 1rem;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .profile-avatar {
+        width: 100%;
+        align-items: center;
+    }
+
+    .profile-avatar img,
+    .avatar-placeholder {
+        width: 100px;
+        height: 100px;
+        margin-left: 0;
+        font-size: 2rem;
+    }
+
+    .upload-btn {
+        width: auto;
+        min-width: 140px;
+    }
+
+    .profile-meta {
+        width: 100%;
+    }
+
+    .profile-meta h1 {
+        font-size: 1.75rem;
+    }
+
+    .profile-meta p {
+        font-size: 0.95rem;
     }
 
     .profile-actions {
         flex-direction: column;
         width: 100%;
+        gap: 0.75rem;
     }
 
     .profile-actions .btn {
@@ -577,10 +628,16 @@
 
     .profile-grid {
         grid-template-columns: 1fr;
+        gap: 1.25rem;
     }
 
     .glass-card {
         padding: 1.5rem;
+        border-radius: 16px;
+    }
+
+    .profile-card header h2 {
+        font-size: 1.25rem;
     }
 
     .order-summary-header {
@@ -629,18 +686,64 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 600px) {
     .profile-main {
-        padding: 1.5rem 0;
+        padding: 1rem 0;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+
+    .profile-header {
+        padding: 1.25rem;
+        gap: 1.25rem;
     }
 
     .profile-avatar img, .avatar-placeholder {
         width: 90px;
         height: 90px;
+        font-size: 1.8rem;
+    }
+
+    .upload-btn {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.9rem;
     }
 
     .profile-meta h1 {
-        font-size: 1.7rem;
+        font-size: 1.5rem;
+    }
+
+    .profile-meta p {
+        font-size: 0.9rem;
+    }
+
+    .glass-card {
+        padding: 1.25rem;
+    }
+
+    .profile-card header h2 {
+        font-size: 1.1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .profile-card form label {
+        font-size: 0.9rem;
+    }
+
+    .profile-card form input[type="text"],
+    .profile-card form input[type="email"],
+    .profile-card form input[type="tel"],
+    .profile-card form input[type="password"],
+    .profile-card form textarea {
+        padding: 0.7rem 0.9rem;
+        font-size: 0.9rem;
+    }
+
+    .profile-card form button {
+        width: 100%;
+        padding: 0.75rem 1.25rem;
     }
 
     .order-card {
@@ -710,10 +813,35 @@
     }
 
     .update-section {
-        padding: 1.4rem;
+        padding: 1.25rem;
     }
 
     .update-section header h2 {
-        font-size: 1.25rem;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .profile-avatar img, .avatar-placeholder {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5rem;
+    }
+
+    .profile-meta h1 {
+        font-size: 1.3rem;
+    }
+
+    .profile-header {
+        padding: 1rem;
+    }
+
+    .glass-card {
+        padding: 1rem;
+    }
+
+    .profile-card form button {
+        padding: 0.65rem 1rem;
+        font-size: 0.85rem;
     }
 }

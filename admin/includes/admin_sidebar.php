@@ -2,7 +2,10 @@
 // Get current page for active state
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
-<aside class="admin-sidebar">
+<aside class="admin-sidebar" aria-label="Admin navigation">
+    <button class="sidebar-toggle sidebar-toggle-inline" aria-label="Toggle sidebar" aria-expanded="true" title="Collapse sidebar">
+        <span class="material-icons-round">chevron_left</span>
+    </button>
     <div class="sidebar-header">
         <div class="sidebar-logo">
             <span class="logo-icon material-icons-round">store</span>

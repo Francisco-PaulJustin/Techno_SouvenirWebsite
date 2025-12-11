@@ -65,11 +65,11 @@ if (!empty($cart)) {
                                             <img src="admin/uploads/<?php echo htmlspecialchars($item['product']['image']); ?>" alt="<?php echo htmlspecialchars($item['product']['name']); ?>">
                                             <span><?php echo htmlspecialchars($item['product']['name']); ?></span>
                                         </td>
-                                        <td>₱<?php echo number_format($item['product']['price'], 2); ?></td>
-                                        <td>
+                                        <td data-label="Price">₱<?php echo number_format($item['product']['price'], 2); ?></td>
+                                        <td data-label="Quantity">
                                             <input type="number" class="quantity-input" data-product-id="<?php echo $item['product']['id']; ?>" value="<?php echo $item['quantity']; ?>" min="1" max="<?php echo $item['product']['stock']; ?>">
                                         </td>
-                                        <td>₱<?php echo number_format($item['subtotal'], 2); ?></td>
+                                        <td data-label="Subtotal">₱<?php echo number_format($item['subtotal'], 2); ?></td>
                                         <td>
                                             <button class="btn ghost-btn remove-from-cart" type="button" data-product-id="<?php echo $item['product']['id']; ?>">Remove</button>
                                         </td>

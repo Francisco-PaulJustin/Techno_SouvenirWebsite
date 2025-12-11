@@ -227,18 +227,18 @@ require_once 'includes/navbar.php';
                     
                     <div class="form-section">
                         <h2>Payment Method</h2>
-                        <div class="form-group">
-                            <label>
+                        <div class="form-group payment-method-group">
+                            <label class="payment-method-label">
                                 <input type="radio" name="payment_method" value="credit_card" required>
-                                Credit Card
+                                <span>Credit Card</span>
                             </label>
-                            <label>
+                            <label class="payment-method-label">
                                 <input type="radio" name="payment_method" value="paypal" required>
-                                PayPal
+                                <span>PayPal</span>
                             </label>
-                            <label>
+                            <label class="payment-method-label">
                                 <input type="radio" name="payment_method" value="cash_on_delivery" required>
-                                Cash on Delivery
+                                <span>Cash on Delivery</span>
                             </label>
                         </div>
                     </div>

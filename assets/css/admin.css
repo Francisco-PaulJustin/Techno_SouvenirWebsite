@@ -1177,6 +1177,7 @@ body.admin-body {
 @media (max-width: 992px) {
     .admin-sidebar {
         transform: translateX(-100%);
+        transition: transform var(--transition);
     }
     
     .admin-sidebar.open {
@@ -1190,17 +1191,40 @@ body.admin-body {
     
     .sidebar-toggle {
         display: flex;
+        left: 1rem;
+        top: 1rem;
+    }
+
+    body.sidebar-open .sidebar-overlay {
+        display: block;
     }
     
     .page-header {
         flex-direction: column;
         align-items: flex-start;
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .page-header::before {
+        content: '';
+        width: 100%;
+        height: 60px;
     }
 }
 
 @media (max-width: 768px) {
     .stats-grid {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem;
+    }
+
+    .stat-number {
+        font-size: 1.75rem;
     }
     
     .admin-content {
@@ -1210,29 +1234,119 @@ body.admin-body {
     .admin-form {
         padding: 1.25rem;
     }
+
+    .form-header {
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+    }
+
+    .form-header h2 {
+        font-size: 1.1rem;
+    }
     
     .form-row {
         grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
     }
     
+    .admin-table {
+        font-size: 0.85rem;
+    }
+
     .admin-table thead th,
     .admin-table tbody td {
-        padding: 0.75rem 1rem;
+        padding: 0.75rem 0.85rem;
+    }
+
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table-header {
+        padding: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
     }
     
     .page-title {
         font-size: 1.5rem;
     }
+
+    .page-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .card-header {
+        padding: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .card-body {
+        padding: 1.25rem;
+    }
+
+    .order-info-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .status-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .status-form select {
+        width: 100%;
+        min-width: auto;
+    }
 }
 
 @media (max-width: 576px) {
+    .admin-content {
+        padding: 0.75rem;
+    }
+
+    .page-title {
+        font-size: 1.3rem;
+    }
+
+    .stats-grid {
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
     .btn {
         padding: 0.55rem 1rem;
         font-size: 0.85rem;
     }
+
+    .btn-sm {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+    }
     
     .form-actions {
         flex-direction: column;
+        gap: 0.75rem;
     }
     
     .form-actions .btn {
@@ -1242,6 +1356,69 @@ body.admin-body {
     .table-header {
         flex-direction: column;
         align-items: flex-start;
+        padding: 0.85rem;
+    }
+
+    .admin-table {
+        font-size: 0.8rem;
+    }
+
+    .admin-table thead th,
+    .admin-table tbody td {
+        padding: 0.6rem 0.75rem;
+    }
+
+    .admin-table .cell-image img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card-header {
+        padding: 0.85rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .admin-form {
+        padding: 1rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.65rem 0.85rem;
+        font-size: 0.9rem;
+    }
+
+    .breadcrumb {
+        font-size: 0.8rem;
+        margin-bottom: 0.75rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .admin-content {
+        padding: 0.5rem;
+    }
+
+    .page-title {
+        font-size: 1.2rem;
+    }
+
+    .stat-card {
+        padding: 0.85rem;
+    }
+
+    .stat-number {
+        font-size: 1.35rem;
+    }
+
+    .admin-table thead th,
+    .admin-table tbody td {
+        padding: 0.5rem 0.6rem;
+        font-size: 0.75rem;
     }
 }
 
@@ -1265,8 +1442,8 @@ body.admin-body {
     top: 1rem;
     left: 1rem;
     z-index: 1001;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     border-radius: var(--radius-md);
     background: var(--clr-primary);
     color: #fff;
@@ -1275,11 +1452,125 @@ body.admin-body {
     align-items: center;
     justify-content: center;
     box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+}
+
+.sidebar-toggle:hover {
+    background: var(--clr-primary-dark);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.sidebar-toggle:active {
+    transform: scale(0.95);
+}
+
+.sidebar-toggle .material-icons-round {
+    font-size: 24px;
+}
+
+/* Inline sidebar toggle (desktop, inside sidebar) */
+.sidebar-toggle-inline {
+    display: none;
+    position: absolute;
+    top: 1rem;
+    right: -18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--clr-primary);
+    color: #fff;
+    border: 2px solid #fff;
+    box-shadow: var(--shadow-sm);
+    z-index: 1002;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+}
+
+.sidebar-toggle-inline:hover {
+    background: var(--clr-primary-dark);
+    transform: scale(1.1);
+}
+
+.sidebar-toggle-inline .material-icons-round {
+    font-size: 20px;
+}
+
+@media (min-width: 993px) {
+    .sidebar-toggle-inline {
+        display: flex;
+    }
+
+    .sidebar-toggle {
+        display: none;
+    }
+
+    .admin-sidebar.collapsed .sidebar-toggle-inline {
+        right: -18px;
+    }
+
+    .admin-sidebar.collapsed .sidebar-toggle-inline .material-icons-round::before {
+        content: "chevron_right";
+    }
+}
+
+/* Sidebar open state */
+body.sidebar-open .sidebar-toggle {
+    left: calc(var(--sidebar-width) + 1rem);
+}
+
+body.sidebar-open .sidebar-toggle .material-icons-round::before {
+    content: "close";
 }
 
 @media (max-width: 992px) {
     .sidebar-toggle {
         display: flex;
+    }
+
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+
+    body.sidebar-open .sidebar-toggle {
+        left: calc(var(--sidebar-width) + 0.5rem);
+    }
+}
+
+/* Desktop: Add toggle for collapsed sidebar state */
+@media (min-width: 993px) {
+    .sidebar-toggle {
+        display: flex;
+    }
+
+    .admin-sidebar.collapsed {
+        width: var(--sidebar-width-collapsed);
+    }
+
+    .admin-sidebar.collapsed .sidebar-logo h2,
+    .admin-sidebar.collapsed .sidebar-badge,
+    .admin-sidebar.collapsed .nav-label,
+    .admin-sidebar.collapsed .nav-section-title,
+    .admin-sidebar.collapsed .admin-user-details {
+        display: none;
+    }
+
+    .admin-sidebar.collapsed .sidebar-nav a {
+        justify-content: center;
+        padding: 0.75rem;
+    }
+
+    .admin-sidebar.collapsed .admin-content {
+        margin-left: var(--sidebar-width-collapsed);
+    }
+
+    .admin-sidebar.collapsed .sidebar-toggle {
+        left: calc(var(--sidebar-width-collapsed) - 18px);
+    }
+
+    .admin-sidebar.collapsed .sidebar-toggle .material-icons-round::before {
+        content: "chevron_right";
     }
 }
 

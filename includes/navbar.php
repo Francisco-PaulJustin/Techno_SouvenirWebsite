@@ -4,6 +4,11 @@
             <a href="index.php"><img src="assets/images/logo.png" alt="<?php echo SITE_NAME; ?> Logo" class="logo"></a>
             <span style="font-size: 1.5rem; font-weight: bold; color: #333; margin-left: 0.5rem;">MemoCraft</span>
         </div>
+        <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
         <ul class="nav-menu">
             <li><a href="index.php">Home</a></li>
             <li><a href="about.php">About</a></li>
@@ -17,7 +22,10 @@
             $is_customer = isset($_SESSION['user_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'customer';
             ?>
             <?php if ($is_customer): ?>
-                <a href="cart.php" class="cart-link nav-btn">Cart (<span id="cart-count">0</span>)</a>
+                <a href="cart.php" class="cart-link nav-btn" aria-label="Shopping cart">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-text">Cart (<span id="cart-count">0</span>)</span>
+                </a>
                 <a href="orders.php" class="nav-btn">Orders</a>
                 <div class="nav-profile">
                     <?php

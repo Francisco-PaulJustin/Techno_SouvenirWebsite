@@ -11,3 +11,10 @@
     <link rel="stylesheet" href="../assets/css/admin.css">
 </head>
 <body class="admin-body">
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" aria-label="Toggle sidebar" aria-expanded="false">
+        <span class="material-icons-round">menu</span>
+    </button>
+    
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay"></div>
