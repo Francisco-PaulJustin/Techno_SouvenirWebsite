@@ -427,6 +427,73 @@
     padding-bottom: 0;
 }
 
+.order-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed rgba(90, 46, 152, 0.1);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cancel-order-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #E74C3C;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+}
+
+.cancel-order-btn:hover {
+    background: #c0392b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+}
+
+.cancel-order-btn:active {
+    transform: translateY(0);
+}
+
+.cancel-order-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.cancel-order-btn .material-icons-round {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .order-actions {
+        justify-content: center;
+    }
+    
+    .cancel-order-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .order-actions {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+    
+    .cancel-order-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.85rem;
+    }
+}
+
 .order-products-summary h4,
 .order-shipping-payment h4 {
     font-size: 1rem;
@@ -770,6 +837,17 @@
 
     .order-actions-row .btn {
         width: 100%;
+    }
+    
+    .order-actions {
+        justify-content: center;
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+    
+    .cancel-order-btn {
+        width: 100%;
+        justify-content: center;
     }
 }
 

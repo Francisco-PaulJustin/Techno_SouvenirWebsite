@@ -115,6 +115,27 @@ if (!empty($items_to_process)) {
     }
 }
 
+// Prevent duplicate order submission - check if same order was just created
+$check_duplicate = $pdo->prepare("
+    SELECT id FROM orders 
+    WHERE user_id = ? 
+    AND total = ? 
+    AND shipping_name = ? 
+    AND shipping_email = ? 
+    AND created_at > DATE_SUB(NOW(), INTERVAL 5 SECOND)
+    ORDER BY created_at DESC 
+    LIMIT 1
+");
+$check_duplicate->execute([$_SESSION['user_id'], $total, $name, $email]);
+$recent_order = $check_duplicate->fetch(PDO::FETCH_ASSOC);
+
+if ($recent_order) {
+    // Duplicate submission detected - redirect to existing order
+    $_SESSION['checkout_error'] = 'Order is already being processed.';
+    header('Location: ../orders.php?order_success=true&order_id=' . $recent_order['id']);
+    exit;
+}
+
 // Create order
 try {
     $pdo->beginTransaction();
@@ -131,7 +152,11 @@ try {
     $stmt_update_stock = $pdo->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
 
     foreach ($items_to_process as $p_id => $quantity) {
-        $product = $product_details[$p_id]; // Get product details
+        // Get product details for this product ID
+        if (!isset($product_details[$p_id])) {
+            throw new Exception('Product details not found for product ID: ' . $p_id);
+        }
+        $product = $product_details[$p_id];
         $stmt_order_item->execute([$order_id, $p_id, $quantity, $product['price']]);
         $stmt_update_stock->execute([$quantity, $p_id]);
     }

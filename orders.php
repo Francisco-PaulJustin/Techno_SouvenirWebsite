@@ -175,6 +175,21 @@ require_once 'includes/navbar.php';
                                     ?></p>
                                     <p><strong>Payment Method:</strong> <?= htmlspecialchars($order['payment_method']) ?></p>
                                 </div>
+                                
+                                <?php 
+                                // Show cancel button only for cancellable orders
+                                $can_cancel = in_array(strtolower($order['status']), ['pending', 'processing']);
+                                ?>
+                                <?php if ($can_cancel): ?>
+                                    <div class="order-actions">
+                                        <button type="button" class="btn btn-danger cancel-order-btn" 
+                                                data-order-id="<?= $order['id'] ?>" 
+                                                data-order-total="₱<?= number_format($order['total'], 2) ?>">
+                                            <span class="material-icons-round">cancel</span>
+                                            Cancel Order
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>

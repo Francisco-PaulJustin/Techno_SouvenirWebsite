@@ -132,4 +132,91 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+    
+    // Cancel order functionality
+    document.addEventListener('click', async function(e) {
+        const cancelButton = e.target.closest('.cancel-order-btn');
+        if (cancelButton) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const orderId = cancelButton.getAttribute('data-order-id');
+            const orderTotal = cancelButton.getAttribute('data-order-total');
+            
+            if (!orderId) {
+                if (typeof customAlert === 'function') {
+                    customAlert('Order ID is missing', 'error');
+                } else {
+                    alert('Order ID is missing');
+                }
+                return;
+            }
+            
+            // Show confirmation dialog
+            let confirmed = false;
+            if (typeof customConfirm === 'function') {
+                confirmed = await customConfirm(
+                    `Are you sure you want to cancel this order? This action cannot be undone.\n\nOrder Total: ${orderTotal}`,
+                    'Cancel Order'
+                );
+            } else {
+                confirmed = confirm(`Are you sure you want to cancel this order? This action cannot be undone.\n\nOrder Total: ${orderTotal}`);
+            }
+            
+            if (!confirmed) {
+                return;
+            }
+            
+            // Disable button during request
+            cancelButton.disabled = true;
+            const originalHTML = cancelButton.innerHTML;
+            cancelButton.innerHTML = '<span class="material-icons-round">hourglass_empty</span> Cancelling...';
+            
+            try {
+                const response = await fetch('api/cancel_order.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    if (typeof customAlert === 'function') {
+                        customAlert('Order cancelled successfully', 'success').then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        alert('Order cancelled successfully');
+                        location.reload();
+                    }
+                } else {
+                    if (typeof customAlert === 'function') {
+                        customAlert(data.message || 'Failed to cancel order', 'error');
+                    } else {
+                        alert(data.message || 'Failed to cancel order');
+                    }
+                    cancelButton.disabled = false;
+                    cancelButton.innerHTML = originalHTML;
+                }
+            } catch (error) {
+                console.error('Error cancelling order:', error);
+                if (typeof customAlert === 'function') {
+                    customAlert('An error occurred while cancelling the order. Please try again.', 'error');
+                } else {
+                    alert('An error occurred while cancelling the order. Please try again.');
+                }
+                cancelButton.disabled = false;
+                cancelButton.innerHTML = originalHTML;
+            }
+        }
+    });
 });

@@ -87,6 +87,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         if (empty($error)) {
+            // Prevent duplicate order submission - check if same order was just created
+            $check_duplicate = $pdo->prepare("
+                SELECT id FROM orders 
+                WHERE user_id = ? 
+                AND total = ? 
+                AND shipping_name = ? 
+                AND shipping_email = ? 
+                AND created_at > DATE_SUB(NOW(), INTERVAL 5 SECOND)
+                ORDER BY created_at DESC 
+                LIMIT 1
+            ");
+            $check_duplicate->execute([$_SESSION['user_id'], $total, $name, $email]);
+            $recent_order = $check_duplicate->fetch(PDO::FETCH_ASSOC);
+            
+            if ($recent_order) {
+                // Duplicate submission detected - redirect to existing order
+                $_SESSION['checkout_error'] = 'Order is already being processed.';
+                header('Location: orders.php?order_success=true&order_id=' . $recent_order['id']);
+                exit;
+            }
+            
             // Create order
             try {
                 $pdo->beginTransaction();
