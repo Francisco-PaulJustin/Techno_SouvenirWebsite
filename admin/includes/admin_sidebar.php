@@ -60,6 +60,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <span class="nav-label">Manage Users</span>
                     </a>
                 </li>
+                <li>
+                    <a href="manage_categories.php" class="<?php echo $current_page === 'manage_categories.php' ? 'active' : ''; ?>">
+                        <span class="nav-icon material-icons-round">category</span>
+                        <span class="nav-label">Manage Categories</span>
+                    </a>
+                </li>
             </ul>
         </div>
         
