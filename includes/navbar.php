@@ -1,8 +1,10 @@
 <nav class="navbar">
     <div class="container">
         <div class="nav-brand">
-            <a href="index.php"><img src="assets/images/logo.png" alt="<?php echo SITE_NAME; ?> Logo" class="logo"></a>
-            <span style="font-size: 1.5rem; font-weight: bold; color: #333; margin-left: 0.5rem;">MemoCraft</span>
+            <a href="index.php" class="nav-brand-link">
+                <img src="assets/images/logo.png" alt="<?php echo SITE_NAME; ?> Logo" class="logo">
+                <span class="nav-brand-text" style="font-size: 1.5rem; font-weight: bold; margin-left: 0.5rem;">MemoCraft</span>
+            </a>
         </div>
         <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
             <span></span>

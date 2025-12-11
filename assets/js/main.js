@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothSections();
     initAuthModal();
     initMobileMenu();
+    initDropdownEnhancements();
 });
 
 function updateCartCount() {
@@ -163,6 +164,48 @@ function initMobileMenu() {
                 navActions.classList.remove('mobile-open');
             }
             body.classList.remove('mobile-menu-active');
+        });
+    });
+}
+
+function initDropdownEnhancements() {
+    // Enhance dropdown selects in filter forms
+    const selects = document.querySelectorAll('.filter-form select');
+    
+    selects.forEach(select => {
+        // Add visual feedback on change
+        select.addEventListener('change', function() {
+            // Add a subtle animation class
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+        
+        // Handle focus states for better UX
+        select.addEventListener('focus', function() {
+            const wrapper = this.closest('.select-wrapper');
+            if (wrapper) {
+                wrapper.classList.add('focused');
+            }
+        });
+        
+        select.addEventListener('blur', function() {
+            const wrapper = this.closest('.select-wrapper');
+            if (wrapper) {
+                wrapper.classList.remove('focused');
+            }
+        });
+        
+        // Update dropdown arrow rotation on open (for browsers that support it)
+        select.addEventListener('mousedown', function() {
+            const wrapper = this.closest('.select-wrapper');
+            if (wrapper) {
+                wrapper.classList.add('open');
+                setTimeout(() => {
+                    wrapper.classList.remove('open');
+                }, 300);
+            }
         });
     });
 }

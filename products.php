@@ -34,23 +34,35 @@ $total_pages = ceil($total_products / $per_page);
             
             <div class="products-filters" data-animate>
                 <form method="GET" action="products.php" class="filter-form">
-                    <input type="text" name="search" placeholder="Search artisan goods..." value="<?php echo htmlspecialchars($search); ?>">
-                    <select name="category">
-                        <option value="">All Categories</option>
-                        <?php
-                        $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
-                        while ($cat = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                            $selected = ($category == $cat['id']) ? 'selected' : '';
-                            echo '<option value="' . $cat['id'] . '" ' . $selected . '>' . htmlspecialchars($cat['name']) . '</option>';
-                        }
-                        ?>
-                    </select>
-                    <select name="sort">
-                        <option value="name" <?php echo $sort == 'name' ? 'selected' : ''; ?>>Name A-Z</option>
-                        <option value="price_asc" <?php echo $sort == 'price_asc' ? 'selected' : ''; ?>>Price: Low to High</option>
-                        <option value="price_desc" <?php echo $sort == 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
-                    </select>
-                    <button type="submit" class="btn gradient-btn">Filter</button>
+                    <div class="filter-group">
+                        <input type="text" name="search" placeholder="🔍 Search artisan goods..." value="<?php echo htmlspecialchars($search); ?>">
+                    </div>
+                    <div class="filter-group">
+                        <div class="select-wrapper">
+                            <select name="category" id="category-select" aria-label="Filter by category">
+                                <option value="">All Categories</option>
+                                <?php
+                                $stmt = $pdo->query("SELECT * FROM categories ORDER BY name");
+                                while ($cat = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                    $selected = ($category == $cat['id']) ? 'selected' : '';
+                                    echo '<option value="' . $cat['id'] . '" ' . $selected . '>' . htmlspecialchars($cat['name']) . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <div class="select-wrapper">
+                            <select name="sort" id="sort-select" aria-label="Sort products">
+                                <option value="name" <?php echo $sort == 'name' ? 'selected' : ''; ?>>Name A-Z</option>
+                                <option value="price_asc" <?php echo $sort == 'price_asc' ? 'selected' : ''; ?>>Price: Low to High</option>
+                                <option value="price_desc" <?php echo $sort == 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <button type="submit" class="btn gradient-btn">Apply Filters</button>
+                    </div>
                 </form>
             </div>
             

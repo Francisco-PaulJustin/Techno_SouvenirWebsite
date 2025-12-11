@@ -21,15 +21,30 @@
 .empty-cart {
     text-align: center;
     padding: 5rem 2rem;
-    background: #fff;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f6fb 100%);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(90, 46, 152, 0.08);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.empty-cart::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-primary);
 }
 
 .empty-cart p {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     color: var(--clr-muted);
     margin-bottom: 2rem;
+    font-weight: 500;
 }
 
 /* Cart Table */
@@ -37,15 +52,25 @@
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    background: #fff;
+    background: linear-gradient(145deg, #ffffff 0%, #f8f6fb 100%);
     border-radius: var(--radius-lg);
     overflow: hidden;
     box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(90, 46, 152, 0.08);
 }
 
 .cart-table thead {
-    background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-primary-light) 100%);
+    background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-primary-light) 60%, var(--clr-accent) 100%);
+    background-size: 200% 200%;
     color: #fff;
+    animation: gradientShift 5s ease infinite;
+    box-shadow: 0 4px 15px rgba(90, 46, 152, 0.2);
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
 }
 
 .cart-table th {
