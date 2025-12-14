@@ -228,7 +228,8 @@ require_once 'includes/admin_header.php';
                                         </button>
                                         <form method="POST" action="manage_categories.php" style="display: inline;" id="delete-category-form-<?php echo $category['id']; ?>">
                                             <input type="hidden" name="category_id" value="<?php echo $category['id']; ?>">
-                                            <button type="button" name="delete_category" class="btn btn-danger btn-sm" title="Delete"
+                                            <input type="hidden" name="delete_category" value="1">
+                                            <button type="button" class="btn btn-danger btn-sm" title="Delete"
                                                     onclick="handleDeleteCategory(<?php echo $category['id']; ?>, 'Are you sure you want to delete this category? This action cannot be undone.');">
                                                 <span class="material-icons-round">delete</span>
                                             </button>
