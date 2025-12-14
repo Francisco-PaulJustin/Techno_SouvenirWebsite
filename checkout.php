@@ -235,7 +235,7 @@ require_once 'includes/navbar.php';
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="city">City *</label>
+                                <label for="city">Personalized Message *</label>
                                 <input type="text" id="city" name="city" required>
                             </div>
                             

@@ -72,7 +72,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <div class="nav-section nav-section-bottom">
             <ul>
                 <li>
-                    <a href="../index.php?admin_view=1" class="nav-link-external" target="_blank" rel="noopener noreferrer" title="View main website as admin">
+                    <a href="../index.php?admin_view=1" class="nav-link-external" title="View main website as admin">
                         <span class="nav-icon material-icons-round">launch</span>
                         <span class="nav-label">View Website</span>
                     </a>
