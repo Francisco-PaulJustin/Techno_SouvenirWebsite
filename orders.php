@@ -32,13 +32,13 @@ if (isset($_GET['order_success']) && $_GET['order_success'] === 'true') {
 $orders_stmt = $pdo->prepare("
     SELECT
         o.*,
-        GROUP_CONCAT(
-            COALESCE(oi.product_id, '') , ':',
-            COALESCE(oi.quantity, '') , ':',
-            COALESCE(oi.price, '') , ':',
-            COALESCE(p.name, 'Unknown Product') , ':',
-            COALESCE(p.image, '')
-            SEPARATOR ';'
+        STRING_AGG(
+            COALESCE(oi.product_id::text, '') || ':' ||
+            COALESCE(oi.quantity::text, '') || ':' ||
+            COALESCE(oi.price::text, '') || ':' ||
+            COALESCE(p.name, 'Unknown Product') || ':' ||
+            COALESCE(p.image, ''),
+            ';'
         ) AS items_full_data
     FROM orders o
     LEFT JOIN order_items oi ON o.id = oi.order_id

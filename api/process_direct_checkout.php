@@ -58,13 +58,13 @@ $total = $product['price'] * $quantity;
 try {
     $pdo->beginTransaction();
 
-    $stmt = $pdo->prepare("INSERT INTO orders (user_id, total, shipping_name, shipping_email, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_zip, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO orders (user_id, total, shipping_name, shipping_email, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_zip, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id");
     $stmt->execute([
         $user_id, $total, $shipping_name, $shipping_email, $shipping_phone,
         $shipping_address, $shipping_city, $shipping_state, $shipping_zip,
         $payment_method, 'Processing'
     ]);
-    $order_id = $pdo->lastInsertId();
+    $order_id = $stmt->fetchColumn();
 
     $stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
     $stmt->execute([$order_id, $product['id'], $quantity, $product['price']]);

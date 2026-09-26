@@ -32,7 +32,7 @@ function getProducts($search = '', $category = '', $sort = 'name', $limit = null
     $params = [];
     
     if (!empty($search)) {
-        $where[] = "(p.name LIKE ? OR p.description LIKE ?)";
+        $where[] = "(p.name ILIKE ? OR p.description ILIKE ?)";
         $search_param = "%$search%";
         $params[] = $search_param;
         $params[] = $search_param;
@@ -72,7 +72,7 @@ function getProductCount($search = '', $category = '') {
     $params = [];
     
     if (!empty($search)) {
-        $where[] = "(name LIKE ? OR description LIKE ?)";
+        $where[] = "(name ILIKE ? OR description ILIKE ?)";
         $search_param = "%$search%";
         $params[] = $search_param;
         $params[] = $search_param;

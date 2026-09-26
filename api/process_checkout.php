@@ -122,7 +122,7 @@ $check_duplicate = $pdo->prepare("
     AND total = ? 
     AND shipping_name = ? 
     AND shipping_email = ? 
-    AND created_at > DATE_SUB(NOW(), INTERVAL 5 SECOND)
+    AND created_at > NOW() - INTERVAL '5 seconds'
     ORDER BY created_at DESC 
     LIMIT 1
 ");
@@ -140,12 +140,12 @@ if ($recent_order) {
 try {
     $pdo->beginTransaction();
     
-    $stmt = $pdo->prepare("INSERT INTO orders (user_id, total, shipping_name, shipping_email, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_zip, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO orders (user_id, total, shipping_name, shipping_email, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_zip, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id");
     $stmt->execute([
         $_SESSION['user_id'], $total, $name, $email, $phone,
         $address, $city, $state, $zip, $payment_method, 'Processing'
     ]);
-    $order_id = $pdo->lastInsertId();
+    $order_id = $stmt->fetchColumn();
     
     // Create order items and update stock
     $stmt_order_item = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");

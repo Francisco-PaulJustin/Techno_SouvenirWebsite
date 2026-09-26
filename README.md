@@ -1,6 +1,6 @@
 # Souvenir Shop - E-commerce Website
 
-A complete PHP + MySQL + HTML + CSS + JavaScript e-commerce website for a souvenir shop.
+A complete PHP + PostgreSQL (Supabase) + HTML + CSS + JavaScript e-commerce website for a souvenir shop.
 
 ## Features
 
@@ -71,19 +71,22 @@ souvenir_shop/
 
 ## Installation
 
-1. **Database Setup**
-   - Create a MySQL database
-   - Import the SQL file: `sql/souvenir_shop.sql`
-   - Update database credentials in `includes/config.php`
+1. **Database Setup (Supabase PostgreSQL)**
+   - Create a Supabase project
+   - Run `sql/souvenir_shop.sql` in the Supabase SQL editor
+   - Make sure the PHP `pdo_pgsql` extension is enabled
 
 2. **Configuration**
-   - Edit `includes/config.php` with your database credentials:
+   - Credentials are never committed. Copy `includes/config.local.example.php` to
+     `includes/config.local.php` (gitignored) and fill in your Supabase details:
      ```php
-     define('DB_HOST', 'localhost');
-     define('DB_NAME', 'souvenir_shop');
-     define('DB_USER', 'your_username');
-     define('DB_PASS', 'your_password');
+     return [
+         'DB_HOST' => 'aws-0-ap-northeast-1.pooler.supabase.com',
+         'DB_USER' => 'postgres.your-project-ref',
+         'DB_PASS' => 'your-database-password',
+     ];
      ```
+   - Or set the `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` environment variables instead
 
 3. **File Permissions**
    - Ensure `admin/uploads/` directory is writable for image uploads
@@ -125,7 +128,7 @@ souvenir_shop/
 ## Technologies Used
 
 - **Backend**: PHP 7.4+
-- **Database**: MySQL
+- **Database**: PostgreSQL (Supabase)
 - **Frontend**: HTML5, CSS3, JavaScript
 - **Server**: Apache (XAMPP/WAMP)
 
