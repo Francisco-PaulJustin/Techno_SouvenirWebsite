@@ -17,6 +17,9 @@ COPY . /var/www/html/
 RUN mkdir -p /var/www/html/admin/uploads /var/www/html/uploads/profiles \
     && chown -R www-data:www-data /var/www/html/admin/uploads /var/www/html/uploads
 
+# Health check URL for uptime pingers: /health -> health.php
+RUN echo "Alias /health /var/www/html/health.php" > /etc/apache2/conf-enabled/health.conf
+
 # Render tells the app which port to use through $PORT (defaults to 80 when run elsewhere)
 CMD sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf \
     && sed -i "s/:80>/:${PORT:-80}>/" /etc/apache2/sites-available/000-default.conf \
