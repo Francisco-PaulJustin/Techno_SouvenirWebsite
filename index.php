@@ -15,7 +15,7 @@ require_once 'includes/navbar.php';
     <?php
     // Get a random featured product image for hero background, or use first available product
     $hero_image = null;
-    $hero_stmt = $pdo->query("SELECT image FROM products WHERE image IS NOT NULL AND image != '' ORDER BY RAND() LIMIT 1");
+    $hero_stmt = $pdo->query("SELECT image FROM products WHERE image IS NOT NULL AND image != '' ORDER BY RANDOM() LIMIT 1");
     $hero_product = $hero_stmt->fetch(PDO::FETCH_ASSOC);
     if ($hero_product && !empty($hero_product['image'])) {
         $hero_image = 'admin/uploads/' . $hero_product['image'];

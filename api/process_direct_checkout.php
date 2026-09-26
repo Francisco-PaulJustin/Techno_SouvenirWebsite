@@ -38,7 +38,7 @@ if (!$product) {
 
 if ($quantity > $product['stock']) {
     // Redirect back to product page with stock error
-    header('Location: ../product_view.php?id=' . $product_id . '&error=Insufficient stock for ' . urlencode($product['name'])');
+    header('Location: ../product_view.php?id=' . $product_id . '&error=Insufficient stock for ' . urlencode($product['name']));
     exit;
 }
 

@@ -1,9 +1,10 @@
 <?php
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'souvenir_shop');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+// Database configuration (Supabase PostgreSQL)
+define('DB_HOST', 'aws-0-ap-northeast-1.pooler.supabase.com');
+define('DB_PORT', '5432');
+define('DB_NAME', 'postgres');
+define('DB_USER', 'postgres.gyayuxztinphamhgmkpq');
+define('DB_PASS', '6ebb0pvYenukgOg9');
 
 // Site configuration
 define('SITE_NAME', 'MemoCraft');
@@ -11,8 +12,10 @@ define('SITE_URL', 'http://localhost/techno_website/souvenir_shop');
 
 // Database connection
 try {
+    $dsn = "pgsql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";sslmode=require";
+    
     $pdo = new PDO(
-        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+        $dsn,
         DB_USER,
         DB_PASS,
         [
@@ -25,4 +28,3 @@ try {
     die("Database connection failed: " . $e->getMessage());
 }
 ?>
-
