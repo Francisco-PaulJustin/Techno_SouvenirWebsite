@@ -9,6 +9,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Enum types (values are lowercase; the database rejects anything else)
+DO $$ BEGIN
+    CREATE TYPE user_role AS ENUM ('customer', 'admin');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
+DO $$ BEGIN
+    CREATE TYPE order_status AS ENUM ('pending', 'processing', 'shipped', 'completed', 'cancelled');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
@@ -20,7 +31,7 @@ CREATE TABLE IF NOT EXISTS users (
     phone VARCHAR(50),
     address TEXT,
     profile_image VARCHAR(255),
-    role VARCHAR(20) DEFAULT 'customer' CHECK (role IN ('customer', 'admin')),
+    role user_role DEFAULT 'customer',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -49,13 +60,11 @@ CREATE TABLE IF NOT EXISTS products (
 );
 
 -- Orders table
--- status is free text: the app stores 'pending', 'processing', 'shipped', 'completed', 'cancelled'
--- (some older rows use capitalized values, which the code already handles)
 CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     total DECIMAL(10, 2) NOT NULL,
-    status VARCHAR(20) DEFAULT 'pending',
+    status order_status DEFAULT 'pending',
     shipping_name VARCHAR(100) NOT NULL,
     shipping_email VARCHAR(100) NOT NULL,
     shipping_phone VARCHAR(20),

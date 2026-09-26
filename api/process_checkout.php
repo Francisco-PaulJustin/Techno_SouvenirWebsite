@@ -143,7 +143,7 @@ try {
     $stmt = $pdo->prepare("INSERT INTO orders (user_id, total, shipping_name, shipping_email, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_zip, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id");
     $stmt->execute([
         $_SESSION['user_id'], $total, $name, $email, $phone,
-        $address, $city, $state, $zip, $payment_method, 'Processing'
+        $address, $city, $state, $zip, $payment_method, 'processing'
     ]);
     $order_id = $stmt->fetchColumn();
     

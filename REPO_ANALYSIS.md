@@ -1,8 +1,10 @@
 # MemoCraft Repository Analysis
 
 > **Status (2026-09-26):** Items 1 and 2, and the MySQL part of item 11, are fixed in
-> [PR #1](https://github.com/Francisco-PaulJustin/Techno_SouvenirWebsite/pull/1).
-> For item 1, the database password still has to be changed in Supabase.
+> [PR #1](https://github.com/Francisco-PaulJustin/Techno_SouvenirWebsite/pull/1). The Supabase
+> password has been changed and the old one removed from git history. A follow-up also fixed
+> checkout and the admin dashboard, which used capitalized status values that the
+> `order_status` enum rejects.
 
 ## What it is
 

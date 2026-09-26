@@ -62,7 +62,7 @@ try {
     $stmt->execute([
         $user_id, $total, $shipping_name, $shipping_email, $shipping_phone,
         $shipping_address, $shipping_city, $shipping_state, $shipping_zip,
-        $payment_method, 'Processing'
+        $payment_method, 'processing'
     ]);
     $order_id = $stmt->fetchColumn();
 

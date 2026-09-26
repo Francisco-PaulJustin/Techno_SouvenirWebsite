@@ -23,7 +23,7 @@ $stmt = $pdo->query("SELECT COUNT(*) as count FROM orders");
 $stats['orders'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
 // Pending orders
-$stmt = $pdo->query("SELECT COUNT(*) as count FROM orders WHERE status = 'pending' OR status = 'processing' OR status = 'Processing'");
+$stmt = $pdo->query("SELECT COUNT(*) as count FROM orders WHERE status IN ('pending', 'processing')");
 $stats['pending_orders'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
 // Total users
@@ -31,7 +31,7 @@ $stmt = $pdo->query("SELECT COUNT(*) as count FROM users WHERE role = 'customer'
 $stats['users'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
 // Total revenue
-$stmt = $pdo->query("SELECT SUM(total) as total FROM orders WHERE status = 'completed' OR status = 'Completed'");
+$stmt = $pdo->query("SELECT SUM(total) as total FROM orders WHERE status = 'completed'");
 $stats['revenue'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
 // Recent orders
