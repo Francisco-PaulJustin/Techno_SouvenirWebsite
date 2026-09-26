@@ -14,7 +14,7 @@ require_once 'includes/navbar.php';
                 <h1>Designed with wanderers in mind.</h1>
             </div>
             <div class="about-content" data-animate>
-                <p> to our souvenir shop—your curated destination for keepsakes that celebrate culture, creativity, and cherished memories. Every item is handpicked from artisans around the world, ensuring authenticity and heart in every piece.</p>
+                <p>Welcome to our souvenir shop—your curated destination for keepsakes that celebrate culture, creativity, and cherished memories. Every item is handpicked from artisans around the world, ensuring authenticity and heart in every piece.</p>
                 <div class="about-grid">
                     <div class="card">
                         <h2>Crafted with Purpose</h2>
