@@ -1,0 +1,7 @@
+.git
+.serena
+.env
+# Real credentials come from Render environment variables, never from the image
+includes/config.local.php
+Dockerfile
+.dockerignore

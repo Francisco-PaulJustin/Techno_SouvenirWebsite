@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS products (
     stock INT DEFAULT 0,
     category_id INT REFERENCES categories(id) ON DELETE SET NULL,
     image VARCHAR(255),
-    featured SMALLINT DEFAULT 0,
+    featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

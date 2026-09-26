@@ -1,7 +1,7 @@
 <?php
 function getFeaturedProducts($limit = 6) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.featured = 1 AND p.stock > 0 ORDER BY p.id DESC LIMIT ?");
+    $stmt = $pdo->prepare("SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.featured = TRUE AND p.stock > 0 ORDER BY p.id DESC LIMIT ?");
     $stmt->execute([$limit]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
