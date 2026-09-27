@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 require_once 'includes/auth.php';
 
@@ -10,150 +9,144 @@ $page_title = 'Checkout';
 $additional_js = ['cart.js'];
 require_once 'cart/cart_session.php';
 
-// Handle direct checkout from product_view.php
-$direct_product_id = $_POST['product_id'] ?? ($_GET['product_id'] ?? null);
-$direct_quantity = $_POST['quantity'] ?? ($_GET['quantity'] ?? null);
-$is_direct_checkout = false;
+$payment_methods = ['credit_card', 'paypal', 'cash_on_delivery'];
+$positive_int = ['options' => ['min_range' => 1]];
 
-// Determine if this request is a direct checkout (Buy Now)
-if ($direct_product_id && $direct_quantity) {
-    if (!isLoggedIn()) {
-        header('Location: login.php?redirect=checkout.php?product_id=' . $direct_product_id . '&quantity=' . $direct_quantity);
+// "Buy Now" on product_view.php opens this page with product_id and quantity,
+// and the checkout form sends them back as hidden fields
+$direct_product_id = filter_var($_POST['product_id'] ?? $_GET['product_id'] ?? null, FILTER_VALIDATE_INT, $positive_int);
+$direct_quantity = filter_var($_POST['quantity'] ?? $_GET['quantity'] ?? null, FILTER_VALIDATE_INT, $positive_int);
+$is_direct_checkout = $direct_product_id && $direct_quantity;
+
+if ($is_direct_checkout) {
+    $selected_cart = [$direct_product_id => $direct_quantity];
+} else {
+    $cart = getCart();
+    if (empty($cart)) {
+        header('Location: cart.php');
         exit;
     }
 
-    // Create a temporary cart for direct checkout
-    $selected_cart = [$direct_product_id => (int)$direct_quantity];
-    $selected_products_ids = [$direct_product_id];
-    $is_direct_checkout = true;
-} else {
-    $cart = getCart();
+    // Items ticked on the cart page (kept as hidden fields on this page); default to the whole cart
+    $selected_ids = $_POST['selected_products'] ?? array_keys($cart);
+    $selected_cart = [];
+    foreach ((array)$selected_ids as $p_id) {
+        $p_id = (int)$p_id;
+        if (isset($cart[$p_id]) && (int)$cart[$p_id] > 0) {
+            $selected_cart[$p_id] = (int)$cart[$p_id];
+        }
+    }
 }
-
-if (!$is_direct_checkout && empty($cart)) {
-    header('Location: cart.php');
-    exit;
-}
+$selected_products_ids = array_keys($selected_cart);
 
 $message = '';
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $phone = $_POST['phone'] ?? '';
-    $address = $_POST['address'] ?? '';
-    $city = $_POST['city'] ?? '';
+// The cart page also POSTs here, so only the checkout form's place_order field places an order
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['place_order'])) {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $address = trim($_POST['address'] ?? '');
+    $city = trim($_POST['city'] ?? '');
     $state = ''; // State field removed - using empty string
-    $zip = $_POST['zip'] ?? '';
+    $zip = trim($_POST['zip'] ?? '');
     $payment_method = $_POST['payment_method'] ?? '';
-    
-    // If not a direct checkout POST, then get selected products from form
-    if (!$is_direct_checkout) {
-        $selected_products_ids = $_POST['selected_products'] ?? [];
-        $selected_cart = [];
-        foreach ($selected_products_ids as $p_id) {
-            if (isset($cart[$p_id])) {
-                $selected_cart[$p_id] = $cart[$p_id];
-            }
-        }
-    } else {
-        // Ensure direct checkout cart is populated based on posted values
-        $direct_product_id = $_POST['product_id'] ?? $direct_product_id;
-        $direct_quantity = $_POST['quantity'] ?? $direct_quantity;
-        if ($direct_product_id && $direct_quantity) {
-            $selected_cart = [$direct_product_id => (int)$direct_quantity];
-            $selected_products_ids = [$direct_product_id];
-        }
-    }
 
     if (empty($selected_cart)) {
         $error = 'No items selected for checkout.';
-    } elseif (!empty($name) && !empty($email) && !empty($address) && !empty($payment_method)) {
+    } elseif ($name === '' || $email === '' || $address === '' || $payment_method === '') {
+        $error = 'Please fill in all required fields.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Please enter a valid email address.';
+    } elseif (!in_array($payment_method, $payment_methods, true)) {
+        $error = 'Please choose a valid payment method.';
+    } else {
         // Calculate total
         $total = 0;
         $placeholders = str_repeat('?,', count($selected_cart) - 1) . '?';
         $stmt = $pdo->prepare("SELECT id, price, stock, name FROM products WHERE id IN ($placeholders)");
         $stmt->execute(array_keys($selected_cart));
         $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        foreach ($products as $product) {
-            $quantity = $selected_cart[$product['id']];
-            if ($quantity > $product['stock']) {
-                $error = 'Insufficient stock for ' . $product['name'];
-                break;
+
+        if (count($products) !== count($selected_cart)) {
+            $error = 'Some items are no longer available. Please review your cart.';
+        } else {
+            foreach ($products as $product) {
+                $quantity = $selected_cart[$product['id']];
+                if ($quantity > $product['stock']) {
+                    $error = 'Insufficient stock for ' . $product['name'];
+                    break;
+                }
+                $total += $product['price'] * $quantity;
             }
-            $total += $product['price'] * $quantity;
         }
-        
+
         if (empty($error)) {
             // Prevent duplicate order submission - check if same order was just created
             $check_duplicate = $pdo->prepare("
-                SELECT id FROM orders 
-                WHERE user_id = ? 
-                AND total = ? 
-                AND shipping_name = ? 
-                AND shipping_email = ? 
+                SELECT id FROM orders
+                WHERE user_id = ?
+                AND total = ?
+                AND shipping_name = ?
+                AND shipping_email = ?
                 AND created_at > NOW() - INTERVAL '5 seconds'
-                ORDER BY created_at DESC 
+                ORDER BY created_at DESC
                 LIMIT 1
             ");
             $check_duplicate->execute([$_SESSION['user_id'], $total, $name, $email]);
             $recent_order = $check_duplicate->fetch(PDO::FETCH_ASSOC);
-            
+
             if ($recent_order) {
                 // Duplicate submission detected - redirect to existing order
-                $_SESSION['checkout_error'] = 'Order is already being processed.';
                 header('Location: orders.php?order_success=true&order_id=' . $recent_order['id']);
                 exit;
             }
-            
+
             // Create order
             try {
                 $pdo->beginTransaction();
-                
+
                 $stmt = $pdo->prepare("INSERT INTO orders (user_id, total, shipping_name, shipping_email, shipping_phone, shipping_address, shipping_city, shipping_state, shipping_zip, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id");
                 $stmt->execute([$_SESSION['user_id'], $total, $name, $email, $phone, $address, $city, $state, $zip, $payment_method, 'pending']);
                 $order_id = $stmt->fetchColumn();
-                
-                // Create order items
-                $stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+
+                $item_stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
+                // Only succeeds while enough stock is left, so simultaneous orders can't oversell
+                $stock_stmt = $pdo->prepare("UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?");
                 foreach ($products as $product) {
                     $quantity = $selected_cart[$product['id']];
-                    $stmt->execute([$order_id, $product['id'], $quantity, $product['price']]);
-                    
-                    // Update stock
-                    $update_stmt = $pdo->prepare("UPDATE products SET stock = stock - ? WHERE id = ?");
-                    $update_stmt->execute([$quantity, $product['id']]);
+                    $stock_stmt->execute([$quantity, $product['id'], $quantity]);
+                    if ($stock_stmt->rowCount() === 0) {
+                        throw new RuntimeException('Insufficient stock for ' . $product['name']);
+                    }
+                    $item_stmt->execute([$order_id, $product['id'], $quantity, $product['price']]);
                 }
-                
-                // Clear only selected items from cart if not direct checkout
+
+                $pdo->commit();
+
+                // Clear only the ordered items from the cart if not direct checkout
                 if (!$is_direct_checkout) {
                     foreach ($selected_products_ids as $p_id) {
                         unset($_SESSION['cart'][$p_id]);
                     }
                 }
-                
-                $pdo->commit();
-                
+
                 // Redirect to orders page with success message and order ID
                 $_SESSION['order_success'] = 'Order placed successfully!';
                 header('Location: orders.php?order_success=true&order_id=' . $order_id);
                 exit;
-            } catch (Exception $e) {
+            } catch (RuntimeException $e) {
                 $pdo->rollBack();
-                $error = 'Error processing order: ' . $e->getMessage();
+                $error = $e->getMessage();
+            } catch (PDOException $e) {
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                error_log('Checkout failed: ' . $e->getMessage());
+                $error = 'Could not place your order. Please try again.';
             }
         }
-    } else {
-        $error = 'Please fill in all required fields.';
-    }
-} else {
-    // For initial GET request, ensure cart items are loaded for display
-    // If it's a direct checkout, selected_cart is already populated
-    if (!$is_direct_checkout) {
-        $selected_products_ids = array_keys($cart);
-        $selected_cart = $cart;
     }
 }
 
@@ -192,14 +185,6 @@ require_once 'includes/navbar.php';
     <section class="checkout-section">
         <div class="container">
             <h1>Checkout</h1>
-            
-            <?php 
-            // Display session error messages from API redirects
-            if (isset($_SESSION['checkout_error'])) {
-                $error = $_SESSION['checkout_error'];
-                unset($_SESSION['checkout_error']);
-            }
-            ?>
             
             <?php if ($message): ?>
                 <div class="alert alert-success"><?php echo htmlspecialchars($message); ?></div>
@@ -266,12 +251,12 @@ require_once 'includes/navbar.php';
                     
                     <button type="submit" class="btn gradient-btn">Place Order</button>
 
+                    <input type="hidden" name="place_order" value="1">
                     <?php
                     // Persist selection for direct checkout
-                    if ($is_direct_checkout && !empty($selected_products_ids)) {
-                        echo '<input type="hidden" name="is_direct_checkout" value="1">';
-                        echo '<input type="hidden" name="product_id" value="' . htmlspecialchars($direct_product_id) . '">';
-                        echo '<input type="hidden" name="quantity" value="' . htmlspecialchars($direct_quantity) . '">';
+                    if ($is_direct_checkout) {
+                        echo '<input type="hidden" name="product_id" value="' . (int)$direct_product_id . '">';
+                        echo '<input type="hidden" name="quantity" value="' . (int)$direct_quantity . '">';
                     }
                     // Pass selected product IDs as hidden inputs if not a direct checkout
                     if (!$is_direct_checkout && !empty($selected_products_ids)) {

@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../includes/config.php';
 require_once 'includes/admin_auth.php';
 
@@ -31,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } elseif (isset($_POST['update_category'])) {
-        $category_id = $_POST['category_id'] ?? null;
+        $category_id = filter_var($_POST['category_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $name = trim($_POST['name'] ?? '');
         $description = trim($_POST['description'] ?? '');
         
@@ -55,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } elseif (isset($_POST['delete_category'])) {
-        $category_id = $_POST['category_id'] ?? null;
+        $category_id = filter_var($_POST['category_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         
         if ($category_id) {
             // Check if any products are using this category

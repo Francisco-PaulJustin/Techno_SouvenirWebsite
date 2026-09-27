@@ -1,17 +1,14 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 
 $page_title = 'Login';
 $additional_css = ['auth.css'];
 $additional_js = ['auth.js'];
-require_once 'includes/header.php';
 
-// Default redirect target
-$redirect = isset($_GET['redirect']) && $_GET['redirect'] !== '' ? $_GET['redirect'] : 'index.php';
-
-// Normalize redirect to avoid open redirect issues (only allow local paths)
-if (strpos($redirect, '://') !== false) {
+// Where to go after login. Only relative paths inside this site are allowed,
+// so ?redirect=https://evil.com or //evil.com can't send users elsewhere.
+$redirect = $_GET['redirect'] ?? '';
+if (!is_string($redirect) || !preg_match('#^[A-Za-z0-9_-]+\.php(\?[A-Za-z0-9_=&%.-]*)?$#', $redirect)) {
     $redirect = 'index.php';
 }
 
@@ -26,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address.';
     } else {
-        $stmt = $pdo->prepare('SELECT * FROM users WHERE email = :email LIMIT 1');
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE LOWER(email) = LOWER(:email) LIMIT 1');
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -55,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+require_once 'includes/header.php';
 ?>
 
 <main class="auth-page">

@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../includes/config.php';
 require_once '../cart/cart_session.php';
 
@@ -27,12 +26,12 @@ if ($isAjax) {
     }
 }
 
-$product_id = $data['product_id'] ?? $_POST['product_id'] ?? null;
-$quantity = isset($data['quantity']) ? (int)$data['quantity'] : (isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1);
+$product_id = filter_var($data['product_id'] ?? $_POST['product_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+$quantity = (int)($data['quantity'] ?? $_POST['quantity'] ?? 1);
 
-// Get referrer for redirect (fallback to products page)
-$referrer = $_SERVER['HTTP_REFERER'] ?? '../products.php';
-$redirectUrl = $referrer;
+// Non-AJAX requests go back to the product page (or the product list)
+$returnPage = $product_id ? 'product_view.php?id=' . $product_id : 'products.php';
+$redirectUrl = '../' . $returnPage;
 
 // Handle login requirement
 if (!$isLoggedIn) {
@@ -44,7 +43,7 @@ if (!$isLoggedIn) {
         ]);
     } else {
         // Redirect to login with return URL
-        $redirectUrl = '../login.php?redirect=' . urlencode($referrer);
+        $redirectUrl = '../login.php?redirect=' . urlencode($returnPage);
         header('Location: ' . $redirectUrl);
     }
     exit;
@@ -59,6 +58,19 @@ if (!$product_id) {
         ]);
     } else {
         $_SESSION['cart_error'] = 'Product ID is required';
+        header('Location: ' . $redirectUrl);
+    }
+    exit;
+}
+
+if ($quantity < 1) {
+    if ($isAjax) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Quantity must be at least 1'
+        ]);
+    } else {
+        $_SESSION['cart_error'] = 'Quantity must be at least 1';
         header('Location: ' . $redirectUrl);
     }
     exit;
@@ -93,7 +105,7 @@ if ($new_quantity > $product['stock']) {
             'message' => 'Insufficient stock available'
         ]);
     } else {
-        $_SESSION['cart_error'] = 'Insufficient stock available for ' . htmlspecialchars($product['name']);
+        $_SESSION['cart_error'] = 'Insufficient stock available for ' . $product['name'];
         header('Location: ' . $redirectUrl);
     }
     exit;
@@ -115,4 +127,3 @@ if ($isAjax) {
 }
 exit;
 ?>
-

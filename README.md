@@ -25,13 +25,12 @@ souvenir_shop/
 ├── cart.php               # Shopping cart
 ├── checkout.php           # Checkout page
 ├── profile.php            # User profile & settings
-├── login.php              # User login
+├── login.php              # Login for customers and admins
 ├── signup.php             # User registration
 ├── logout.php             # Logout
 │
 ├── admin/                 # Admin panel
 │   ├── index.php          # Admin dashboard
-│   ├── login.php          # Admin login
 │   ├── add_product.php    # Add new product
 │   ├── edit_product.php   # Edit product
 │   ├── delete_product.php # Delete product
@@ -57,13 +56,12 @@ souvenir_shop/
 ├── sql/                   # Database
 │   └── souvenir_shop.sql  # Database structure
 │
-├── api/                   # API endpoints
-│   ├── get_products.php
-│   ├── get_product.php
+├── api/                   # JSON endpoints called from assets/js
 │   ├── add_to_cart.php
-│   ├── delete_from_cart.php
 │   ├── update_quantity.php
-│   └── process_checkout.php
+│   ├── delete_from_cart.php
+│   ├── get_cart_count.php
+│   └── cancel_order.php
 │
 └── cart/                  # Cart management
     └── cart_session.php   # Cart session functions
@@ -81,7 +79,7 @@ souvenir_shop/
      `includes/config.local.php` (gitignored) and fill in your Supabase details:
      ```php
      return [
-         'DB_HOST' => 'aws-0-ap-northeast-1.pooler.supabase.com',
+         'DB_HOST' => 'aws-0-ap-southeast-1.pooler.supabase.com',
          'DB_USER' => 'postgres.your-project-ref',
          'DB_PASS' => 'your-database-password',
      ];
@@ -89,18 +87,21 @@ souvenir_shop/
    - Or set the `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS` environment variables instead
 
 3. **File Permissions**
-   - Ensure `admin/uploads/` directory is writable for image uploads
+   - Ensure `admin/uploads/` and `uploads/profiles/` are writable for image uploads
 
 4. **Web Server**
    - Place the project in your web server directory (e.g., `htdocs` for XAMPP)
-   - Access via: `http://localhost/souvenir_shop/`
+   - Access via: `http://localhost/Techno_SouvenirWebsite/`
 
-## Default Admin Account
+5. **Deployment**
+   - The `Dockerfile` runs the site on Render (or any Docker host) with PHP 8.2 + Apache
+   - Set the same `DB_*` values as environment variables on the host
+   - `/health` returns `OK` for uptime monitors
 
-- **Email**: admin@souvenirshop.com
-- **Password**: admin123
+## Admin Account
 
-**Note**: Change the default admin password after first login!
+Admins log in through the normal `login.php` page and are sent to the admin panel.
+Give a user the admin role from **Admin Panel → Users**. Never publish admin passwords here.
 
 ## Features Overview
 
@@ -127,7 +128,7 @@ souvenir_shop/
 
 ## Technologies Used
 
-- **Backend**: PHP 7.4+
+- **Backend**: PHP 8.x
 - **Database**: PostgreSQL (Supabase)
 - **Frontend**: HTML5, CSS3, JavaScript
 - **Server**: Apache (XAMPP/WAMP)

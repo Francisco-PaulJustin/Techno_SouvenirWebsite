@@ -1,10 +1,9 @@
 <?php
-session_start();
 require_once '../includes/config.php';
 require_once 'includes/admin_auth.php';
 
 $page_title = 'Edit Product';
-$product_id = $_GET['id'] ?? null;
+$product_id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $message = '';
 $error = '';
 
@@ -30,6 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stock = $_POST['stock'] ?? '';
     $category_id = $_POST['category_id'] ?? '';
     $featured = isset($_POST['featured']) ? 1 : 0;
+
+    // Postgres rejects '' or text for numeric columns, so validate before saving
+    $price_ok = is_numeric($price) && $price >= 0;
+    $stock_ok = filter_var($stock, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]) !== false;
+    $category_ok = filter_var($category_id, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) !== false;
     $image = $product['image']; // Keep existing image by default
     
     // Handle image upload
@@ -38,10 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!is_dir($upload_dir)) {
             mkdir($upload_dir, 0777, true);
         }
-        $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        
-        if (in_array($file_extension, $allowed_extensions)) {
+        // Check the file content is really an image (the name's extension can't be trusted)
+        $image_types = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_GIF => 'gif', IMAGETYPE_WEBP => 'webp'];
+        $image_info = @getimagesize($_FILES['image']['tmp_name']);
+
+        if ($image_info !== false && isset($image_types[$image_info[2]])) {
+            $file_extension = $image_types[$image_info[2]];
             $new_image = uniqid() . '.' . $file_extension;
             $upload_path = $upload_dir . $new_image;
             
@@ -59,7 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    if (empty($error) && !empty($name) && !empty($price) && !empty($category_id)) {
+    if (empty($error) && (!$price_ok || !$stock_ok || !$category_ok) && $name !== '') {
+        $error = 'Price must be a number, stock a whole number of 0 or more, and a category must be chosen.';
+    }
+
+    if (empty($error) && $name !== '' && $price_ok && $stock_ok && $category_ok) {
         $stmt = $pdo->prepare("UPDATE products SET name = ?, description = ?, price = ?, stock = ?, category_id = ?, image = ?, featured = ? WHERE id = ?");
         if ($stmt->execute([$name, $description, $price, $stock, $category_id, $image, $featured, $product_id])) {
             $message = 'Product updated successfully!';

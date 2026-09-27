@@ -28,4 +28,3 @@ function getFlashMessage() {
     return null;
 }
 ?>
-

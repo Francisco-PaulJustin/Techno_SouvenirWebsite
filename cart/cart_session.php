@@ -56,4 +56,3 @@ function getCartTotal() {
     return $total;
 }
 ?>
-

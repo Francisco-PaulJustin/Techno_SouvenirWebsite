@@ -1,12 +1,11 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 $page_title = 'Categories';
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 
 // Get category from URL
-$category_id = $_GET['id'] ?? null;
+$category_id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 $category_name = 'All Categories';
 
 if ($category_id) {

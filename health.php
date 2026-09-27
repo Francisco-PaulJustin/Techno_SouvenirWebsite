@@ -8,6 +8,7 @@ header('Cache-Control: no-store');
 // config.php exits with die() if the database is unreachable, so report failure
 // by default and only switch to 200 once the connection and query succeed
 http_response_code(503);
+define('SKIP_SESSION', true);
 require_once __DIR__ . '/includes/config.php';
 
 try {

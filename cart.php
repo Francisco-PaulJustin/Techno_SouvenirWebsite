@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 $page_title = 'Cart';
 $additional_css = ['cart.css'];

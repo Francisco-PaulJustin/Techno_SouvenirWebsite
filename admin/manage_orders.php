@@ -1,24 +1,46 @@
 <?php
-session_start();
 require_once '../includes/config.php';
 require_once 'includes/admin_auth.php';
 
 $page_title = 'Manage Orders';
-$order_id = $_GET['id'] ?? null;
+$order_id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+$statuses = ['pending', 'processing', 'shipped', 'completed', 'cancelled'];
 $message = '';
 $error = '';
 
 // Update order status
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
-    $order_id = $_POST['order_id'] ?? null;
+    $order_id = filter_var($_POST['order_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
     $status = $_POST['status'] ?? '';
-    
-    if ($order_id && $status) {
-        $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
-        if ($stmt->execute([$status, $order_id])) {
+
+    if (!$order_id || !in_array($status, $statuses, true)) {
+        $error = 'Invalid order or status.';
+    } else {
+        $stmt = $pdo->prepare("SELECT status FROM orders WHERE id = ?");
+        $stmt->execute([$order_id]);
+        $current_status = $stmt->fetchColumn();
+
+        if ($current_status === 'cancelled' && $status !== 'cancelled') {
+            // Stock was already returned when it was cancelled
+            $error = 'A cancelled order cannot be reopened. Ask the customer to place a new order.';
+        } elseif ($current_status !== false && $current_status !== $status) {
+            $pdo->beginTransaction();
+            $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ? AND status = ?");
+            $stmt->execute([$status, $order_id, $current_status]);
+
+            // Cancelling returns the items to stock, the same as a customer cancelling
+            if ($status === 'cancelled' && $stmt->rowCount() > 0) {
+                $stmt = $pdo->prepare("
+                    UPDATE products p SET stock = p.stock + oi.quantity
+                    FROM order_items oi
+                    WHERE oi.order_id = ? AND oi.product_id = p.id
+                ");
+                $stmt->execute([$order_id]);
+            }
+            $pdo->commit();
             $message = 'Order status updated successfully!';
         } else {
-            $error = 'Error updating order status.';
+            $message = 'Order status updated successfully!';
         }
     }
 }

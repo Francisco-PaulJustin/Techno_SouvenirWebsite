@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 require_once 'includes/auth.php';
 
@@ -11,10 +10,10 @@ require_once 'includes/header.php';
 require_once 'includes/navbar.php';
 
 // Get search and filter parameters
-$search = $_GET['search'] ?? '';
-$category = $_GET['category'] ?? '';
-$sort = $_GET['sort'] ?? 'name';
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$search = is_string($_GET['search'] ?? null) ? trim($_GET['search']) : '';
+$category = filter_var($_GET['category'] ?? '', FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) ?: '';
+$sort = is_string($_GET['sort'] ?? null) ? $_GET['sort'] : 'name';
+$page = max(1, (int)($_GET['page'] ?? 1));
 $per_page = 12;
 $offset = ($page - 1) * $per_page;
 

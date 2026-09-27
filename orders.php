@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 require_once 'includes/auth.php';
 
@@ -29,54 +28,35 @@ if (isset($_GET['order_success']) && $_GET['order_success'] === 'true') {
 }
 
 // Fetch Orders
-$orders_stmt = $pdo->prepare("
-    SELECT
-        o.*,
-        STRING_AGG(
-            COALESCE(oi.product_id::text, '') || ':' ||
-            COALESCE(oi.quantity::text, '') || ':' ||
-            COALESCE(oi.price::text, '') || ':' ||
-            COALESCE(p.name, 'Unknown Product') || ':' ||
-            COALESCE(p.image, ''),
-            ';'
-        ) AS items_full_data
-    FROM orders o
-    LEFT JOIN order_items oi ON o.id = oi.order_id
-    LEFT JOIN products p ON oi.product_id = p.id
-    WHERE o.user_id = ?
-    GROUP BY o.id
-    ORDER BY o.created_at DESC
-");
+$orders_stmt = $pdo->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC");
 $orders_stmt->execute([$user_id]);
 $user_orders = $orders_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Parse order item data
-foreach ($user_orders as &$order) {
-    $order['items_data'] = [];
-    if (!empty($order['items_full_data'])) {
-        $products_raw = explode(';', $order['items_full_data']);
-        foreach ($products_raw as $item_str) {
-            $parts = explode(':', $item_str, 5);
-            
-            $pid = $parts[0] ?? null;
-            $qty = $parts[1] ?? null;
-            $price = $parts[2] ?? null;
-            $pname = $parts[3] ?? null;
-            $pimage = $parts[4] ?? null;
-            
-            $image_url = !empty($pimage) ? 'admin/uploads/' . $pimage : 'assets/images/placeholder.png';
-
-            $order['items_data'][] = [
-                'product_id' => $pid,
-                'quantity' => $qty,
-                'price' => $price,
-                'name' => $pname,
-                'image_url' => $image_url,
-                'variant' => 'N/A'
-            ];
-        }
-    }
+// Fetch the items of all those orders in one query and attach them to their order
+$items_stmt = $pdo->prepare("
+    SELECT oi.order_id, oi.product_id, oi.quantity, oi.price, p.name, p.image
+    FROM order_items oi
+    JOIN orders o ON o.id = oi.order_id
+    LEFT JOIN products p ON p.id = oi.product_id
+    WHERE o.user_id = ?
+    ORDER BY oi.id
+");
+$items_stmt->execute([$user_id]);
+$items_by_order = [];
+foreach ($items_stmt->fetchAll(PDO::FETCH_ASSOC) as $item) {
+    $items_by_order[$item['order_id']][] = [
+        'product_id' => $item['product_id'],
+        'quantity' => $item['quantity'],
+        'price' => $item['price'],
+        'name' => $item['name'] ?? 'Unknown Product',
+        'image_url' => !empty($item['image']) ? 'admin/uploads/' . $item['image'] : '',
+        'variant' => 'N/A'
+    ];
 }
+foreach ($user_orders as &$order) {
+    $order['items_data'] = $items_by_order[$order['id']] ?? [];
+}
+unset($order);
 
 require_once 'includes/header.php';
 require_once 'includes/navbar.php';
@@ -173,7 +153,7 @@ require_once 'includes/navbar.php';
                                         ]);
                                         echo nl2br(htmlspecialchars(implode(', ', $addressParts)));
                                     ?></p>
-                                    <p><strong>Payment Method:</strong> <?= htmlspecialchars($order['payment_method']) ?></p>
+                                    <p><strong>Payment Method:</strong> <?= htmlspecialchars($order['payment_method'] ?? '') ?></p>
                                 </div>
                                 
                                 <?php 

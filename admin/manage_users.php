@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once '../includes/config.php';
 require_once 'includes/admin_auth.php';
 
@@ -10,7 +9,7 @@ $error = '';
 // Handle user actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_user'])) {
-        $user_id = $_POST['user_id'] ?? null;
+        $user_id = filter_var($_POST['user_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         if ($user_id && $user_id != $_SESSION['user_id']) {
             $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
             if ($stmt->execute([$user_id])) {
@@ -22,9 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Cannot delete your own account.';
         }
     } elseif (isset($_POST['update_role'])) {
-        $user_id = $_POST['user_id'] ?? null;
+        $user_id = filter_var($_POST['user_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
         $role = $_POST['role'] ?? '';
-        if ($user_id && $role) {
+        if (!$user_id || !in_array($role, ['customer', 'admin'], true)) {
+            $error = 'Invalid user or role.';
+        } elseif ($user_id == $_SESSION['user_id']) {
+            // Prevents an admin from locking themselves out of the admin panel
+            $error = 'You cannot change your own role.';
+        } else {
             $stmt = $pdo->prepare("UPDATE users SET role = ? WHERE id = ?");
             if ($stmt->execute([$role, $user_id])) {
                 $message = 'User role updated successfully!';

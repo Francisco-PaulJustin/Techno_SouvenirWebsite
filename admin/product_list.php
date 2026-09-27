@@ -1,12 +1,14 @@
 <?php
-session_start();
 require_once '../includes/config.php';
 require_once 'includes/admin_auth.php';
 
 $page_title = 'Product List';
 
-// Handle delete success message
+// Handle delete result messages
 $message = isset($_GET['deleted']) ? 'Product deleted successfully!' : '';
+$error = isset($_GET['delete_blocked'])
+    ? 'This product has been ordered, so it can\'t be deleted without removing it from customers\' order history. Set its stock to 0 to stop selling it.'
+    : '';
 
 // Fetch all products
 $stmt = $pdo->query("
@@ -45,6 +47,13 @@ require_once 'includes/admin_header.php';
             <div class="alert alert-success">
                 <span class="material-icons-round">check_circle</span>
                 <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($error): ?>
+            <div class="alert alert-error">
+                <span class="material-icons-round">error</span>
+                <?php echo htmlspecialchars($error); ?>
             </div>
         <?php endif; ?>
         
@@ -129,12 +138,13 @@ require_once 'includes/admin_header.php';
                                            class="btn btn-ghost btn-sm" title="Edit">
                                             <span class="material-icons-round">edit</span>
                                         </a>
-                                        <a href="delete_product.php?id=<?php echo $product['id']; ?>" 
-                                           class="btn btn-danger btn-sm"
-                                           title="Delete"
-                                           onclick="event.preventDefault(); handleDeleteProduct(this.href, 'Are you sure you want to delete this product?'); return false;">
-                                            <span class="material-icons-round">delete</span>
-                                        </a>
+                                        <form method="POST" action="delete_product.php" style="display: inline;" id="delete-product-form-<?php echo $product['id']; ?>">
+                                            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+                                            <button type="button" class="btn btn-danger btn-sm" title="Delete"
+                                                    onclick="handleDeleteProduct(<?php echo $product['id']; ?>, 'Are you sure you want to delete this product?');">
+                                                <span class="material-icons-round">delete</span>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -146,10 +156,10 @@ require_once 'includes/admin_header.php';
 
 <script>
 // Handle delete product with custom confirm
-async function handleDeleteProduct(url, message) {
+async function handleDeleteProduct(productId, message) {
     const confirmed = await customConfirm(message);
     if (confirmed) {
-        window.location.href = url;
+        document.getElementById('delete-product-form-' + productId).submit();
     }
 }
 </script>

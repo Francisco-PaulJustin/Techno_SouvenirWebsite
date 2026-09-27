@@ -1,6 +1,5 @@
 <?php
 header('Content-Type: application/json');
-session_start();
 require_once '../includes/config.php';
 require_once '../includes/auth.php';
 
@@ -13,8 +12,8 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['user_role']) || $_SESSION[
     exit;
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
-$order_id = $data['order_id'] ?? $_POST['order_id'] ?? null;
+$data = json_decode(file_get_contents('php://input'), true) ?? [];
+$order_id = filter_var($data['order_id'] ?? $_POST['order_id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
 if (!$order_id) {
     echo json_encode([
@@ -27,61 +26,48 @@ if (!$order_id) {
 $user_id = $_SESSION['user_id'];
 
 try {
-    // Start transaction
     $pdo->beginTransaction();
-    
-    // Get order details and verify ownership
+
+    // Cancel in one statement that only matches the user's own cancellable order,
+    // so two cancel requests at once can't both restore stock
     $stmt = $pdo->prepare("
-        SELECT o.*, oi.product_id, oi.quantity 
-        FROM orders o
-        LEFT JOIN order_items oi ON o.id = oi.order_id
-        WHERE o.id = ? AND o.user_id = ?
+        UPDATE orders SET status = 'cancelled', updated_at = NOW()
+        WHERE id = ? AND user_id = ? AND status IN ('pending', 'processing')
     ");
     $stmt->execute([$order_id, $user_id]);
-    $order_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (empty($order_data)) {
-        throw new Exception('Order not found or you do not have permission to cancel this order');
+
+    if ($stmt->rowCount() === 0) {
+        $pdo->rollBack();
+        echo json_encode([
+            'success' => false,
+            'message' => 'This order cannot be cancelled. Only your pending or processing orders can be cancelled.'
+        ]);
+        exit;
     }
-    
-    // Get order status from first row
-    $order_status = $order_data[0]['status'];
-    
-    // Check if order can be cancelled
-    $cancellable_statuses = ['pending', 'processing'];
-    if (!in_array(strtolower($order_status), $cancellable_statuses)) {
-        throw new Exception('This order cannot be cancelled. Only pending or processing orders can be cancelled.');
-    }
-    
-    // Update order status to cancelled
-    $stmt = $pdo->prepare("UPDATE orders SET status = 'cancelled', updated_at = NOW() WHERE id = ? AND user_id = ?");
-    if (!$stmt->execute([$order_id, $user_id])) {
-        throw new Exception('Failed to update order status');
-    }
-    
+
     // Restore product stock
-    foreach ($order_data as $item) {
-        if (!empty($item['product_id']) && !empty($item['quantity'])) {
-            $stmt = $pdo->prepare("UPDATE products SET stock = stock + ? WHERE id = ?");
-            $stmt->execute([$item['quantity'], $item['product_id']]);
-        }
-    }
-    
-    // Commit transaction
+    $stmt = $pdo->prepare("
+        UPDATE products p SET stock = p.stock + oi.quantity
+        FROM order_items oi
+        WHERE oi.order_id = ? AND oi.product_id = p.id
+    ");
+    $stmt->execute([$order_id]);
+
     $pdo->commit();
-    
+
     echo json_encode([
         'success' => true,
         'message' => 'Order cancelled successfully'
     ]);
-    
-} catch (Exception $e) {
-    // Rollback transaction on error
-    $pdo->rollBack();
-    
+} catch (PDOException $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    error_log('Cancel order failed: ' . $e->getMessage());
+
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => 'Could not cancel the order. Please try again.'
     ]);
 }
 ?>

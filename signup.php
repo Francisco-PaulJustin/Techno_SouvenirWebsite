@@ -1,11 +1,9 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 
 $page_title = 'Sign Up';
 $additional_css = ['auth.css'];
 $additional_js = ['auth.js'];
-require_once 'includes/header.php';
 
 $error = '';
 $message = '';
@@ -14,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $first_name = trim($_POST['first_name'] ?? '');
     $last_name = trim($_POST['last_name'] ?? '');
     $email_raw = trim($_POST['email'] ?? '');
-    $email = filter_var($email_raw, FILTER_SANITIZE_EMAIL);
+    $email = strtolower(filter_var($email_raw, FILTER_SANITIZE_EMAIL));
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
     
@@ -28,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Password must be at least 6 characters long.';
     } else {
         try {
-            $stmt = $pdo->prepare('SELECT id FROM users WHERE email = :email LIMIT 1');
+            $stmt = $pdo->prepare('SELECT id FROM users WHERE LOWER(email) = :email LIMIT 1');
             $stmt->execute([':email' => $email]);
             
             if ($stmt->fetch()) {
@@ -58,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+require_once 'includes/header.php';
 ?>
 
 <main class="auth-page">

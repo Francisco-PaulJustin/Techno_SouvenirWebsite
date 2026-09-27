@@ -1,12 +1,11 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 require_once 'includes/auth.php';
 
 // Redirect admins to admin interface if they try to access public pages
 redirectAdminIfLoggedIn();
 
-$product_id = $_GET['id'] ?? null;
+$product_id = filter_var($_GET['id'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
 
 if (!$product_id) {
     header('Location: products.php');

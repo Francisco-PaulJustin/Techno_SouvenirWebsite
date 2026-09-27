@@ -90,4 +90,3 @@ function getProductCount($search = '', $category = '') {
     return $result['count'];
 }
 ?>
-

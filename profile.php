@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'includes/config.php';
 require_once 'includes/auth.php';
 
@@ -37,25 +36,25 @@ function refreshUserSession($user)
 
 // FORM PROCESSING
 // Handle avatar upload
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] !== UPLOAD_ERR_NO_FILE) {
         $target_dir = "uploads/profiles/";
         // Ensure the directory exists
         if (!is_dir($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
-        $image_file_type = strtolower(pathinfo($_FILES['profile_image']['name'], PATHINFO_EXTENSION));
-        $unique_file_name = uniqid() . '.' . $image_file_type;
-        $target_file = $target_dir . $unique_file_name;
         $upload_ok = 1;
-    
-        // Check if image file is a actual image or fake image
-        $check = getimagesize($_FILES['profile_image']['tmp_name']);
-        if ($check !== false) {
-            $upload_ok = 1;
-        } else {
-            $error = "File is not an image.";
+
+        // Check the file content is really a JPG, PNG or GIF (the name's extension can't be trusted)
+        $image_types = [IMAGETYPE_JPEG => 'jpg', IMAGETYPE_PNG => 'png', IMAGETYPE_GIF => 'gif'];
+        $check = $_FILES['profile_image']['error'] === UPLOAD_ERR_OK ? @getimagesize($_FILES['profile_image']['tmp_name']) : false;
+        if ($check === false || !isset($image_types[$check[2]])) {
+            $error = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
             $upload_ok = 0;
+        } else {
+            $image_file_type = $image_types[$check[2]];
         }
+        $unique_file_name = uniqid() . '.' . ($image_file_type ?? 'img');
+        $target_file = $target_dir . $unique_file_name;
     
         // Check file size (e.g., 5MB limit)
         if ($_FILES['profile_image']['size'] > 5000000) {
@@ -63,19 +62,13 @@ function refreshUserSession($user)
             $upload_ok = 0;
         }
     
-        // Allow certain file formats
-        if ($image_file_type != "jpg" && $image_file_type != "png" && $image_file_type != "jpeg" && $image_file_type != "gif") {
-            $error = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $upload_ok = 0;
-        }
-    
         // Check if $upload_ok is set to 0 by an error
         if ($upload_ok == 0) {
-            $error = "Sorry, your file was not uploaded.";
+            $error = $error ?: "Sorry, your file was not uploaded.";
         } else {
             if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $target_file)) {
                 // Delete old profile image if it exists and is not a default image
-                if ($user['profile_image'] && file_exists($user['profile_image'])) {
+                if ($user['profile_image'] && strpos($user['profile_image'], $target_dir) === 0 && file_exists($user['profile_image'])) {
                     unlink($user['profile_image']);
                 }
     
@@ -101,18 +94,18 @@ function refreshUserSession($user)
     
         // Update Profile
         if ($form_type === 'profile_update') {
-            $first_name = trim($_POST['first_name']);
-            $last_name  = trim($_POST['last_name']);
-            $email      = trim($_POST['email']);
-            $phone      = trim($_POST['phone']);
-            $address    = trim($_POST['address']);
+            $first_name = trim($_POST['first_name'] ?? '');
+            $last_name  = trim($_POST['last_name'] ?? '');
+            $email      = strtolower(trim($_POST['email'] ?? ''));
+            $phone      = trim($_POST['phone'] ?? '');
+            $address    = trim($_POST['address'] ?? '');
     
             if (empty($first_name) || empty($last_name) || empty($email) || empty($phone) || empty($address)) {
                 $error = "All fields are required.";
             } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $error = "Invalid email format.";
             } else {
-                $checkStmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+                $checkStmt = $pdo->prepare("SELECT id FROM users WHERE LOWER(email) = ? AND id != ?");
                 $checkStmt->execute([$email, $user_id]);
     
                 if ($checkStmt->fetch()) {
@@ -136,9 +129,9 @@ function refreshUserSession($user)
     
         // Update Password
         elseif ($form_type === 'password_update') {
-            $current_password = $_POST['current_password'];
-            $new_password     = $_POST['new_password'];
-            $confirm_password = $_POST['confirm_password'];
+            $current_password = $_POST['current_password'] ?? '';
+            $new_password     = $_POST['new_password'] ?? '';
+            $confirm_password = $_POST['confirm_password'] ?? '';
     
             if ($new_password !== $confirm_password) {
                 $error = "New passwords do not match.";
@@ -178,7 +171,7 @@ require_once 'includes/navbar.php';
                     <?php if ($user['profile_image']): ?>
                         <img src="<?= htmlspecialchars($user['profile_image']) ?>" alt="Profile Image">
                     <?php else: ?>
-                        <span class="avatar-placeholder"><?= strtoupper($user['first_name'][0]) ?></span>
+                        <span class="avatar-placeholder"><?= htmlspecialchars(strtoupper(substr($user['first_name'], 0, 1))) ?></span>
                     <?php endif; ?>
                     <label for="profile_image_upload" class="btn ghost-btn upload-btn">Upload Image</label>
                     <input type="file" name="profile_image" id="profile_image_upload" accept="image/*" style="display: none;">
@@ -201,11 +194,11 @@ require_once 'includes/navbar.php';
         </div>
 
         <?php if ($message): ?>
-            <div class="alert alert-success"><?= $message ?></div>
+            <div class="alert alert-success"><?= htmlspecialchars($message) ?></div>
         <?php endif; ?>
     
         <?php if ($error): ?>
-            <div class="alert alert-error"><?= $error ?></div>
+            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <!-- PROFILE GRID (Hidden on load) -->
@@ -228,10 +221,10 @@ require_once 'includes/navbar.php';
                     <input type="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required>
 
                     <label>Phone Number</label>
-                    <input type="text" name="phone" value="<?= htmlspecialchars($user['phone']) ?>" required>
+                    <input type="text" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>" required>
 
                     <label>Address</label>
-                    <textarea name="address" required><?= htmlspecialchars($user['address']) ?></textarea>
+                    <textarea name="address" required><?= htmlspecialchars($user['address'] ?? '') ?></textarea>
 
                     <button class="btn gradient-btn">Save Changes</button>
                 </form>
